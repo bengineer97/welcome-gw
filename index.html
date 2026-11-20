@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<base target="_top">
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome — GW champions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -76,7 +77,7 @@ th.d{width:52px}
 <body>
 <div class="wrap"><div class="card">
   <div class="row top">
-    <div><h1 id="title">GW champions</h1><div class="sub" id="wklabel">Loading…</div></div>
+    <div><h1 id="title">GW champions</h1><div class="sub" id="wklabel">Loading the schedule…</div></div>
     <div class="row nav">
       <button id="prev" aria-label="Previous week">&#8249;</button>
       <button id="cur">This week</button>
@@ -97,7 +98,32 @@ th.d{width:52px}
   <div class="ver" id="ver"></div>
 </div></div>
 
-<script>var INIT = <?!= initJson ?>;</script>
+<script>
+// GitHub Pages host: the page saves to the Apps Script back end with fetch().
+// Same calls as google.script.run on the Apps Script-hosted copy, so the page code is shared.
+var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7yXy_8jkW5PYzdWoqIbrAB3UzVtTrcEAR4i3idHGNE_KQ/exec';
+(function () {
+  function post(body) {
+    return fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+  }
+  function done(p, ok, fail) {
+    p.then(function (r) { return r.json(); })
+     .then(function (j) { if (j && j.ok === false) throw new Error(j.error || 'Error'); if (ok) ok(j); })
+     .catch(function (e) { if (fail) fail(e && e.message ? e : new Error('Could not reach the schedule. Check your connection.')); });
+  }
+  function runner(ok, fail) {
+    return {
+      withSuccessHandler: function (f) { return runner(f, fail); },
+      withFailureHandler: function (f) { return runner(ok, f); },
+      getWeek: function (week) { done(fetch(API_URL + '?api=week&week=' + encodeURIComponent(week || '')), ok, fail); },
+      toggle: function (week, uid, day, pin) { done(post({ action: 'toggle', week: week, uid: uid, day: day, pin: pin }), ok, fail); },
+      copyLast: function (week, uid, pin) { done(post({ action: 'copyLast', week: week, uid: uid, pin: pin }), ok, fail); }
+    };
+  }
+  window.google = { script: { run: runner(null, null) } };
+})();
+</script>
+<script>var INIT = null;</script>
 <script>
 var UI_VERSION = '3.8';
 var S = null, me = '', busy = false, pending = 0;
