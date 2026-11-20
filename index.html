@@ -106,7 +106,7 @@ th.d{width:52px}
 var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7yXy_8jkW5PYzdWoqIbrAB3UzVtTrcEAR4i3idHGNE_KQ/exec';
 (function () {
   function post(body) {
-    return fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+    return fetch(API_URL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
   }
   function done(p, ok, fail) {
     p.then(function (r) { return r.json(); })
@@ -127,7 +127,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 </script>
 <script>var INIT = null;</script>
 <script>
-var UI_VERSION = '3.9';
+var UI_VERSION = '4.0';
 var S = null, me = '', busy = false, pending = 0, fresh = false;
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
@@ -178,8 +178,8 @@ function got(s, stale) {
     (s.lastChange ? ' · last change: ' + s.lastChange.name + ', ' + s.lastChange.at : '') + (stale ? ' · updating…' : '');
   $('pin').style.display = s.pinRequired ? '' : 'none';
   var v = $('ver');
-  if (s.version && s.version !== UI_VERSION) { v.className = 'ver warn'; v.textContent = 'Page v' + UI_VERSION + ', server v' + s.version + ': paste both files again and deploy a new version.'; }
-  else { v.className = 'ver'; v.textContent = 'v' + UI_VERSION + (s.version ? '' : ' (server version unknown)'); }
+  if (s.version && s.version !== UI_VERSION) { v.className = 'ver warn'; v.textContent = 'page v' + UI_VERSION + ' \u00b7 server v' + s.version + ': versions differ, update the page on GitHub or Code.gs in Apps Script.'; }
+  else { v.className = 'ver'; v.textContent = 'page v' + UI_VERSION + ' \u00b7 server v' + (s.version || '?'); }
 
   var keep = me || ls.get('gw_me_id');
   var opts = s.roster.slice().sort(function (a, b) { return nm(a).localeCompare(nm(b)); });
@@ -326,13 +326,15 @@ $('bd').addEventListener('click', function (e) {
   var i = +b.dataset.i, d = S.days[i];
   // Show the change right away; the server answer replaces it once every pending tap is back.
   var row = (S.marks[me] || S.days.map(function () { return ''; })).slice();
-  row[i] = row[i] ? '' : (S.warriors.indexOf(me) >= 0 ? 'out' : 'sub');
+  var holder = S.warriors.indexOf(me) >= 0, was = row[i];
+  row[i] = was ? '' : (holder ? 'out' : 'sub');
   S.marks[me] = row;
   render();
   pending++;
-  say('Saving…');
+  say(holder ? (was ? 'Back on for ' + d.day + '.' : 'Asked off ' + d.day + '. MidAm confirms before signets change.')
+             : (was ? 'Withdrew your sub offer for ' + d.day + '.' : 'Offered to sub on ' + d.day + '. Thanks!'), 'ok');
   google.script.run
-    .withSuccessHandler(function (s) { pending--; if (!pending) { got(s); say(s.note || 'Saved.', 'ok'); } })
+    .withSuccessHandler(function (s) { pending--; if (!pending) got(s); })
     .withFailureHandler(function (err) { pending--; say(String(err && err.message || err).replace(/^Error:\s*/, '') + ' Reloading…', 'err'); load(S.week); })
     .toggle(S.week, me, d.day, pin);
 });
