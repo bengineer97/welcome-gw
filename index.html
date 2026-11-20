@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#17162A;--card:#1D1B33;--field:#221F38;--tx:#ECE8DD;--mut:#ABA698;--dim:#8F8A7C;--bd:#2A2840;--bd2:#3A3752;--fbd:#45416A;--me:#26294D;--mebd:#7A76A0;--gold:#F0C46A;
+--onbg:#26401A;--onbd:#4F7A33;--ontx:#C4E89F;--outbg:#4A1E24;--outbd:#C9646C;--outtx:#F4A9AE;--subbg:#13304D;--subbd:#4F8BC4;--subtx:#9CC8F5;
+--grn:#24391A;--grnt:#B5E08F;--amb:#45330C;--ambt:#F5CB7E;--red:#4A1E24;--redt:#F4A9AE;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:16px 10px 24px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px 12px}
+h1{font-size:21px;font-weight:700;margin:0;color:var(--gold)}
+.sub{color:var(--mut);font-size:12px;margin-top:2px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.top{justify-content:space-between;margin-bottom:12px;padding:0 4px}
+select,input,button{font:inherit;color:var(--tx);background:var(--field);border:1px solid var(--fbd);border-radius:8px;height:44px;padding:0 12px}
+select{flex:1;min-width:150px}
+button{cursor:pointer}
+button:hover{border-color:var(--mebd)}
+.nav button{height:36px;padding:0 10px;font-size:13px}
+.nav button[aria-label]{width:36px;padding:0;font-size:18px}
+#msg{min-height:20px;font-size:13px;margin:10px 4px 8px;color:var(--mut)}
+#msg.err{color:var(--outtx)} #msg.ok{color:var(--grnt)}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+th,td{padding:3px 1px;text-align:center;border-bottom:1px solid var(--bd)}
+thead th{border-bottom:1px solid var(--bd2);padding-bottom:6px}
+th:first-child,td:first-child{text-align:left;width:34%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:6px}
+th:last-child,td:last-child{width:8%;color:var(--dim)}
+th{font-weight:700;vertical-align:bottom;color:var(--tx)}
+th:first-child,th:last-child{color:var(--mut)}
+th.today{color:var(--gold)}
+.cnt{display:inline-block;font-size:9px;font-weight:500;line-height:1.25;padding:1px 4px;border-radius:5px}
+.red{background:var(--red);color:var(--redt)} .amb{background:var(--amb);color:var(--ambt)} .grn{background:var(--grn);color:var(--grnt)}
+.mini{display:block;white-space:nowrap}
+.dh{display:flex;flex-direction:column;align-items:center;gap:2px}
+.star{color:var(--mut);font-weight:400}
+.sig{display:inline-flex;vertical-align:-1px;margin-right:4px}
+.c{display:inline-flex;align-items:center;justify-content:center;width:30px;height:26px;border-radius:6px;border:1px solid var(--bd2);padding:0;background:transparent}
+.c.on{background:var(--onbg);border-color:var(--onbd)}
+.c.out{background:var(--outbg);border-color:var(--outbd)}
+.c.sub{background:var(--subbg);border-color:var(--subbd)}
+tr.me td{background:var(--me)}
+tr.me .c:not(.on):not(.out):not(.sub){border-color:var(--mebd)}
+tr.me td:first-child{font-weight:700}
+tr.gone td:first-child{color:var(--dim);font-style:italic}
+.notes{color:var(--mut);font-size:12px;margin:10px 4px 0;line-height:1.6}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+details{margin:10px 4px 0;font-size:13px}
+summary{cursor:pointer;color:var(--mut)}
+.map{margin-top:6px;display:grid;grid-template-columns:auto 1fr;gap:3px 12px}
+.map .f{color:var(--mut);white-space:nowrap}
+.ver{margin:12px 4px 0;font-size:11px;color:var(--dim)}
+.defbox{margin:12px 4px 0;padding:12px 14px;border:1px solid var(--bd2);border-radius:10px;background:#211F3B}
+.defbox h3{margin:0 0 4px;font-size:13px;font-weight:700;color:var(--gold)}
+.dl{font-size:13px;line-height:1.55;margin-top:6px}
+.dl .k,.defbox .k{color:var(--mut)}
+.lab{color:var(--gold);font-weight:500}
+.try{color:var(--subtx)}
+.hold{font-weight:700}
+.top3{margin:4px 0 0;padding-left:20px}
+.bsum{color:var(--gold);font-weight:700;font-size:13px}
+.bsum .k{font-weight:400}
+.top3 li{margin-top:4px;line-height:1.5}
+.pw{display:block;font-size:11px;font-weight:400;color:var(--dim);line-height:1.2}
+.pw b{font-weight:500;color:var(--mut)}
+.ver.warn{color:var(--ambt)}
+th.d{width:52px}
+@media (max-width:480px){.wrap{padding:8px 4px 16px}.card{padding:12px 4px;border-radius:12px}th.d{width:35px}th:last-child,td:last-child{width:28px}h1{font-size:18px}.nav{flex-wrap:nowrap;flex:none}.nav button{height:34px}.nav button[aria-label]{width:32px}#cur{padding:0 8px;font-size:12px}th:first-child,td:first-child{width:auto;padding-left:4px}.c{width:28px;height:26px}.cnt{padding:1px 2px}.top{flex-wrap:nowrap;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+  <div class="row top">
+    <div><h1 id="title">GW champions</h1><div class="sub" id="wklabel">Loading…</div></div>
+    <div class="row nav">
+      <button id="prev" aria-label="Previous week">&#8249;</button>
+      <button id="cur">This week</button>
+      <button id="next" aria-label="Next week">&#8250;</button>
+    </div>
+  </div>
+  <div class="row">
+    <select id="who"><option value="">Who are you?</option></select>
+    <input id="pin" type="password" placeholder="Guild PIN" style="width:110px;display:none">
+    <button id="copy" style="display:none">Same as last week</button>
+  </div>
+  <div id="defbox" class="defbox" style="display:none"></div>
+  <details id="bestbox" class="defbox" style="display:none"><summary class="bsum">Guild best defenses <span class="k">(top 3 hero and titan)</span></summary><div id="bestbody"></div></details>
+  <div id="msg">Pick your name, then tap a day: ask off if you hold a signet, or offer to sub if you don't.</div>
+  <table><thead id="hd"></thead><tbody id="bd"></tbody></table>
+  <div class="notes" id="notes"></div>
+  <details id="mapbox" style="display:none"><summary id="mapsum">Current map</summary><div class="map" id="map"></div></details>
+  <div class="ver" id="ver"></div>
+</div></div>
+
+<script>var INIT = <?!= initJson ?>;</script>
+<script>
+var UI_VERSION = '3.8';
+var S = null, me = '', busy = false, pending = 0;
+var IC = {
+  sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
+  on: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4E89F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  out: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F4A9AE" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  sub: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CC8F5" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
+};
+var ls = {
+  get: function (k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+var $ = function (id) { return document.getElementById(id); };
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function say(t, cls) { var m = $('msg'); m.textContent = t; m.className = cls || ''; }
+function pfmt(n) { return !n ? '-' : n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : Math.round(n / 1000) + 'k'; }
+function pwLine(id) {
+  var p = (S && S.power || {})[id];
+  return p ? '<span class="pw">H <b>' + pfmt(p[0]) + '</b> &#183; T <b>' + pfmt(p[1]) + '</b></span>' : '';
+}
+function nm(id) { return (S && S.names[id]) || ('#' + id); }
+
+function call(fn, args, okMsg) {
+  if (busy) return;
+  busy = true; say('Saving…');
+  var r = google.script.run
+    .withSuccessHandler(function (s) { busy = false; got(s); say(s.note || okMsg || 'Saved.', 'ok'); })
+    .withFailureHandler(function (e) { busy = false; say(String(e && e.message || e).replace(/^Error:\s*/, ''), 'err'); load(S && S.week); });
+  r[fn].apply(r, args);
+}
+
+function load(week, quiet) {
+  google.script.run
+    .withSuccessHandler(function (s) { got(s); })
+    .withFailureHandler(function (e) { if (!quiet) say(String(e && e.message || e), 'err'); })
+    .getWeek(week || '');
+}
+
+function got(s) {
+  S = s;
+  $('title').textContent = s.title;
+  document.title = s.title;
+  var p = s.week.split('-');
+  var d = new Date(+p[0], +p[1] - 1, +p[2]);
+  $('wklabel').textContent = 'Week of ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) +
+    (s.isCurrent ? ' (this week)' : '') + (s.league ? ' · ' + (s.league === 1 ? 'gold' : 'silver') + ' league' : '') +
+    (s.lastChange ? ' · last change: ' + s.lastChange.name + ', ' + s.lastChange.at : '');
+  $('pin').style.display = s.pinRequired ? '' : 'none';
+  var v = $('ver');
+  if (s.version && s.version !== UI_VERSION) { v.className = 'ver warn'; v.textContent = 'Page v' + UI_VERSION + ', server v' + s.version + ': paste both files again and deploy a new version.'; }
+  else { v.className = 'ver'; v.textContent = 'v' + UI_VERSION + (s.version ? '' : ' (server version unknown)'); }
+
+  var keep = me || ls.get('gw_me_id');
+  var opts = s.roster.slice().sort(function (a, b) { return nm(a).localeCompare(nm(b)); });
+  $('who').innerHTML = '<option value="">Who are you?</option>' +
+    opts.map(function (id) { return '<option value="' + esc(id) + '"' + (id === keep ? ' selected' : '') + '>' + esc(nm(id)) + '</option>'; }).join('');
+  me = s.roster.indexOf(keep) >= 0 ? keep : '';
+  $('copy').style.display = me ? '' : 'none';
+  render();
+}
+
+function render() {
+  var s = S, days = s.days, need = days.length ? days[0].need : 15;
+  var isHolder = function (id) { return s.warriors.indexOf(id) >= 0; };
+  var ids = s.roster.slice();
+  Object.keys(s.marks).forEach(function (id) { if (ids.indexOf(id) < 0) ids.push(id); });
+  ids.sort(function (a, b) { return (isHolder(b) - isHolder(a)) || nm(a).localeCompare(nm(b)); });
+  var outs = days.map(function () { return 0; }), subs = outs.slice();
+  Object.keys(s.marks).forEach(function (id) {
+    s.marks[id].forEach(function (v, i) {
+      if (v === 'out' && isHolder(id)) outs[i]++;
+      if (v === 'sub' && !isHolder(id)) subs[i]++;
+    });
+  });
+  $('hd').innerHTML = '<tr><th>Champion</th>' + days.map(function (d, i) {
+    var short = outs[i] - subs[i], k = outs[i] === 0 || short <= 0 ? 'grn' : short <= 2 ? 'amb' : 'red';
+    var today = s.isCurrent && d.day === s.today;
+    return '<th class="d' + (today ? ' today' : '') + '" title="' + esc(d.note || (outs[i] + ' asked off, ' + subs[i] + ' offered to sub')) + '"><div class="dh"><span>' + esc(d.day) +
+      (d.note ? '<span class="star">*</span>' : '') + '</span>' +
+      '<span class="cnt ' + k + '"><span class="mini">' + outs[i] + ' out</span><span class="mini">' + subs[i] + ' sub</span></span></div></th>';
+  }).join('') + '<th>Days</th></tr>';
+
+  if (me) ids = [me].concat(ids.filter(function (id) { return id !== me; }));
+  $('bd').innerHTML = ids.map(function (id) {
+    var h = isHolder(id), row = s.marks[id] || days.map(function () { return ''; });
+    var cls = (id === me ? 'me' : '') + (s.roster.indexOf(id) < 0 ? ' gone' : '');
+    var sig = h ? '<span class="sig" title="Holds a signet in-game now">' + IC.sig + '</span>' : '';
+    var marked = row.filter(Boolean).length;
+    return '<tr class="' + cls + '"><td title="' + esc(nm(id)) + '">' + sig + esc(nm(id)) + pwLine(id) + '</td>' + row.map(function (v, i) {
+      var c = '', t = '', lab;
+      if (h) { if (v === 'out') { c = ' out'; t = IC.out; lab = 'asked off'; } else { c = ' on'; t = IC.on; lab = 'scheduled'; } }
+      else if (v === 'sub') { c = ' sub'; t = IC.sub; lab = 'offered to sub'; }
+      else lab = 'not scheduled';
+      return '<td><button class="c' + c + '" data-i="' + i + '"' + (id === me ? '' : ' tabindex="-1"') +
+        ' aria-label="' + esc(nm(id) + ' ' + days[i].day + ': ' + lab) + '">' + t + '</button></td>';
+    }).join('') + '<td>' + (marked || '') + '</td></tr>';
+  }).join('');
+
+  var notes = [];
+  if (!s.warriors.length) notes.push('<b>Signet holders not loaded yet.</b> Until MidAm\'s Tweaker sends them, every tap counts as a sub offer.');
+  notes.push('<span class="legend"><span>' + IC.sig + 'holds a signet now (' + s.warriors.length + (s.snapshotAt ? ', as of ' + esc(s.snapshotAt) : '') + ')</span>' +
+    '<span>' + IC.on + 'scheduled</span><span>' + IC.out + 'asked off</span><span>' + IC.sub + 'offered to sub</span></span>');
+  if (Object.keys(s.power || {}).length) notes.push('H / T = hero and titan GW defense team power.');
+  notes.push(need + ' signets a day' + (s.league ? ' (' + (s.league === 1 ? 'gold' : 'silver') + ' league)' : '') + '. MidAm confirms every change before signets move in-game.');
+  days.filter(function (d) { return d.note; }).forEach(function (d) { notes.push('* ' + esc(d.day) + ': ' + esc(d.note)); });
+  $('notes').innerHTML = notes.join('<br>');
+  renderMap();
+  renderDef();
+  renderBest();
+}
+
+// Guild best: top 3 hero and titan lineups on record, shown to everyone.
+function renderBest() {
+  var b = S.best, box = $('bestbox');
+  if (!b || (!(b.hero || []).length && !(b.titan || []).length)) { box.style.display = 'none'; return; }
+  var list = function (arr) {
+    return '<ol class="top3">' + arr.map(function (x) {
+      var who = (x.users || []).length ? 'run by ' + x.users.map(esc).join(', ') : 'seen on enemies';
+      return '<li>' + esc(x.u) + ' &#183; ' + holdTxt(x.held, x.n) + ' <span class="k">&#183; ' + who + '</span></li>';
+    }).join('') + '</ol>';
+  };
+  var h = '';
+  if ((b.hero || []).length) h += '<div class="dl"><span class="k">Heroes</span>' + list(b.hero) + '</div>';
+  if ((b.titan || []).length) h += '<div class="dl"><span class="k">Titans</span>' + list(b.titan) + '</div>';
+  h += '<div class="k" style="margin-top:8px;font-size:11px">Best-holding lineups in real GW and CoW fights over the last 60 days, ours and enemies\' (5+ fights).</div>';
+  $('bestbody').innerHTML = h;
+  box.style.display = '';
+}
+
+function holdTxt(h, n) {
+  if (!n) return '<span class="k">no fights on record</span>';
+  if (n < 5) return '<span class="k">held ' + h + ' of ' + n + ', too few fights to judge</span>';
+  var p = Math.round(h * 100 / n), c = p >= 60 ? 'var(--grnt)' : p >= 35 ? 'var(--ambt)' : 'var(--outtx)';
+  return '<span class="hold" style="color:' + c + '">' + p + '%</span> <span class="k">held ' + h + ' of ' + n + '</span>';
+}
+
+// Defense box: MidAm's notes (everyone / this member), the member's walls, and Tweaker's lineup suggestions.
+function renderDef() {
+  var s = S, box = $('defbox'), parts = [];
+  var N = s.notes || { all: [], byId: {} };
+  (N.all || []).forEach(function (t) { parts.push('<div class="dl"><span class="lab">From MidAm:</span> ' + esc(t) + '</div>'); });
+  if (me) {
+    ((N.byId || {})[me] || []).forEach(function (t) { parts.push('<div class="dl"><span class="lab">For you:</span> ' + esc(t) + '</div>'); });
+    var walls = (s.map || []).filter(function (x) { return x.uid === me; }).map(function (x) { return esc(x.fort) + ' (' + esc(x.type) + ')'; });
+    if (walls.length) parts.push('<div class="dl"><span class="k">Your walls:</span> ' + walls.join(', ') + '</div>');
+    var sg = (s.suggest || {})[me] || {};
+    var myPow = (s.power || {})[me];
+    [['hero', 'Hero defense', 0], ['titan', 'Titan defense', 1]].forEach(function (k) {
+      var o = sg[k[0]];
+      if (!o) {
+        if (myPow) parts.push('<div class="dl"><span class="k">' + k[1] + ':</span> ' + pfmt(myPow[k[2]]) + '</div>');
+        return;
+      }
+      var h = '<div class="dl"><span class="k">' + k[1] + (myPow ? ' (' + pfmt(myPow[k[2]]) + ')' : '') + ':</span> ' +
+        (o.cur ? esc(o.cur.u) + ' &#183; ' + holdTxt(o.cur.held, o.cur.n) : '<span class="k">none on record</span>');
+      if (o.sug) {
+        h += '<br><span class="try">Try: ' + esc(o.sug.u) + '</span> &#183; ' + holdTxt(o.sug.held, o.sug.n) +
+          (o.sug.weak ? ' <span class="k">(your units are a bit under the usual power for it)</span>' : '') +
+          (o.sug.noPet ? ' <span class="k">(pet not seen on you)</span>' : '');
+      } else if (o.cur) h += ' <span class="k">&#183; no better lineup found</span>';
+      parts.push(h + '</div>');
+    });
+  }
+  box.style.display = parts.length ? '' : 'none';
+  var full = me && ((s.suggest || {})[me] || {}).fullRoster;
+  box.innerHTML = parts.length ? '<h3>Your defense</h3>' + parts.join('') +
+    (me && s.suggestAt && (s.suggest || {})[me] ? '<div class="k" style="margin-top:8px;font-size:11px">Suggestions come from real GW and CoW fights, using ' +
+      (full ? 'your full roster' : 'units you have been seen with') + '. Updated ' + esc(s.suggestAt) + '.</div>' : '') : '';
+}
+
+function renderMap() {
+  var s = S, box = $('mapbox');
+  if (!s.map || !s.map.length) { box.style.display = 'none'; return; }
+  box.style.display = '';
+  var forts = [], by = {};
+  s.map.slice().sort(function (a, b) { return a.s - b.s; }).forEach(function (x) {
+    var k = x.fort + '|' + x.type;
+    if (!by[k]) { by[k] = { fort: x.fort, type: x.type, who: [] }; forts.push(by[k]); }
+    by[k].who.push(x.uid ? nm(x.uid) : '(empty)');
+  });
+  var empty = s.map.filter(function (x) { return !x.uid; }).length;
+  $('mapsum').textContent = 'Current map: ' + s.map.length + ' slots' + (empty ? ', ' + empty + ' empty' : '') + ' (as of ' + (s.snapshotAt || '?') + ')';
+  $('map').innerHTML = forts.map(function (f) {
+    return '<div class="f">' + esc(f.fort) + ' · ' + esc(f.type) + '</div><div>' + f.who.map(esc).join(', ') + '</div>';
+  }).join('');
+}
+
+$('bd').addEventListener('click', function (e) {
+  var b = e.target.closest('button.c');
+  if (!b) return;
+  if (!b.closest('tr').classList.contains('me')) { say(me ? 'You can only change your own row.' : 'Pick your name first.', 'err'); return; }
+  var pin = $('pin').value.trim();
+  if (S.pinRequired && !pin) { say('Enter the guild PIN first.', 'err'); $('pin').focus(); return; }
+  var i = +b.dataset.i, d = S.days[i];
+  // Show the change right away; the server answer replaces it once every pending tap is back.
+  var row = (S.marks[me] || S.days.map(function () { return ''; })).slice();
+  row[i] = row[i] ? '' : (S.warriors.indexOf(me) >= 0 ? 'out' : 'sub');
+  S.marks[me] = row;
+  render();
+  pending++;
+  say('Saving…');
+  google.script.run
+    .withSuccessHandler(function (s) { pending--; if (!pending) { got(s); say(s.note || 'Saved.', 'ok'); } })
+    .withFailureHandler(function (err) { pending--; say(String(err && err.message || err).replace(/^Error:\s*/, '') + ' Reloading…', 'err'); load(S.week); })
+    .toggle(S.week, me, d.day, pin);
+});
+
+$('who').addEventListener('change', function () {
+  me = this.value; ls.set('gw_me_id', me);
+  $('copy').style.display = me ? '' : 'none';
+  say(me ? (S.warriors.indexOf(me) >= 0 ? 'You hold a signet: tap a day to ask off.' : 'Tap a day to offer to sub.') : 'Pick your name first.');
+  render();
+});
+$('pin').addEventListener('change', function () { ls.set('gw_pin', this.value.trim()); });
+$('copy').addEventListener('click', function () {
+  var pin = $('pin').value.trim();
+  if (S.pinRequired && !pin) { say('Enter the guild PIN first.', 'err'); return; }
+  call('copyLast', [S.week, me, pin]);
+});
+$('prev').onclick = function () { load(S.prev); };
+$('next').onclick = function () { load(S.next); };
+$('cur').onclick = function () { load(''); };
+
+$('pin').value = ls.get('gw_pin');
+if (INIT && INIT.ok) got(INIT); else load('');
+setInterval(function () { if (!busy && !pending && S && document.visibilityState === 'visible') load(S.week, true); }, 60000);
+</script>
+</body>
+</html>
