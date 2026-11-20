@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <title>Welcome — GW champions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -125,8 +127,8 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 </script>
 <script>var INIT = null;</script>
 <script>
-var UI_VERSION = '3.8';
-var S = null, me = '', busy = false, pending = 0;
+var UI_VERSION = '3.9';
+var S = null, me = '', busy = false, pending = 0, fresh = false;
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
   on: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4E89F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
@@ -163,15 +165,17 @@ function load(week, quiet) {
     .getWeek(week || '');
 }
 
-function got(s) {
+function got(s, stale) {
   S = s;
+  fresh = !stale;
+  if (!stale) ls.set('gw_cache', JSON.stringify(s));
   $('title').textContent = s.title;
   document.title = s.title;
   var p = s.week.split('-');
   var d = new Date(+p[0], +p[1] - 1, +p[2]);
   $('wklabel').textContent = 'Week of ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) +
     (s.isCurrent ? ' (this week)' : '') + (s.league ? ' · ' + (s.league === 1 ? 'gold' : 'silver') + ' league' : '') +
-    (s.lastChange ? ' · last change: ' + s.lastChange.name + ', ' + s.lastChange.at : '');
+    (s.lastChange ? ' · last change: ' + s.lastChange.name + ', ' + s.lastChange.at : '') + (stale ? ' · updating…' : '');
   $('pin').style.display = s.pinRequired ? '' : 'none';
   var v = $('ver');
   if (s.version && s.version !== UI_VERSION) { v.className = 'ver warn'; v.textContent = 'Page v' + UI_VERSION + ', server v' + s.version + ': paste both files again and deploy a new version.'; }
@@ -315,6 +319,7 @@ function renderMap() {
 $('bd').addEventListener('click', function (e) {
   var b = e.target.closest('button.c');
   if (!b) return;
+  if (!fresh) { say('Still loading the latest schedule. One moment…'); return; }
   if (!b.closest('tr').classList.contains('me')) { say(me ? 'You can only change your own row.' : 'Pick your name first.', 'err'); return; }
   var pin = $('pin').value.trim();
   if (S.pinRequired && !pin) { say('Enter the guild PIN first.', 'err'); $('pin').focus(); return; }
@@ -341,6 +346,7 @@ $('who').addEventListener('change', function () {
 $('pin').addEventListener('change', function () { ls.set('gw_pin', this.value.trim()); });
 $('copy').addEventListener('click', function () {
   var pin = $('pin').value.trim();
+  if (!fresh) { say('Still loading the latest schedule. One moment…'); return; }
   if (S.pinRequired && !pin) { say('Enter the guild PIN first.', 'err'); return; }
   call('copyLast', [S.week, me, pin]);
 });
@@ -349,7 +355,11 @@ $('next').onclick = function () { load(S.next); };
 $('cur').onclick = function () { load(''); };
 
 $('pin').value = ls.get('gw_pin');
-if (INIT && INIT.ok) got(INIT); else load('');
+if (INIT && INIT.ok) got(INIT);
+else {
+  try { var C = JSON.parse(ls.get('gw_cache') || 'null'); if (C && C.ok) got(C, true); } catch (e) {}
+  load('');
+}
 setInterval(function () { if (!busy && !pending && S && document.visibilityState === 'visible') load(S.week, true); }, 60000);
 </script>
 </body>
