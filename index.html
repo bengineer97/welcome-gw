@@ -269,7 +269,7 @@ function renderBest() {
   var h = '';
   if ((b.hero || []).length) h += '<div class="dl"><span class="k">Heroes</span>' + list(b.hero) + '</div>';
   if ((b.titan || []).length) h += '<div class="dl"><span class="k">Titans</span>' + list(b.titan) + '</div>';
-  h += '<div class="k" style="margin-top:8px;font-size:11px">Best-holding lineups in real GW and CoW fights over the last 60 days, ours and enemies\' (5+ fights).</div>';
+  h += '<div class="k" style="margin-top:8px;font-size:11px">Best-holding lineups in real GW and AoC fights over the last 60 days, ours and enemies\', against attackers of similar power (5+ fights).</div>';
   $('bestbody').innerHTML = h;
   box.style.display = '';
 }
@@ -306,7 +306,7 @@ function renderEnemy() {
       '<div class="ec"><span class="k">Beaten by:</span> ' + ctr + '</div>' +
       (w.h ? '<div class="k" style="font-size:11px;margin-top:2px">' + esc(w.h) + '</div>' : '') + '</div>';
   });
-  h += '<div class="k" style="margin-top:8px;font-size:11px">Beaten by = guildmates’ real GW and CoW wins against this exact lineup, counting only fights that started at full HP. "From" is the lowest team power that won, so check your team is close to it.</div>';
+  h += '<div class="k" style="margin-top:8px;font-size:11px">Beaten by = real GW and AoC wins against this lineup at this power or more, by a team of similar power, counting only fights that started at full HP. "From" is the lowest team power that won, so check your team is close to it.</div>';
   $('enemybody').innerHTML = h;
   var cb = $('eup');
   if (cb) cb.onchange = function () { ls.set('gw_enemy_up', this.checked ? '1' : ''); renderEnemy(); };
@@ -349,7 +349,7 @@ function renderDef() {
   box.style.display = parts.length ? '' : 'none';
   var full = me && ((s.suggest || {})[me] || {}).fullRoster;
   box.innerHTML = parts.length ? '<h3>Your defense</h3>' + parts.join('') +
-    (me && s.suggestAt && (s.suggest || {})[me] ? '<div class="k" style="margin-top:8px;font-size:11px">Suggestions come from real GW and CoW fights, using ' +
+    (me && s.suggestAt && (s.suggest || {})[me] ? '<div class="k" style="margin-top:8px;font-size:11px">Suggestions come from real GW and AoC fights against attackers of similar power, using ' +
       (full ? 'your full roster' : 'units you have been seen with') + '. Updated ' + esc(s.suggestAt) + '.</div>' : '') : '';
 }
 
