@@ -73,6 +73,20 @@ summary{cursor:pointer;color:var(--mut)}
 .pw b{font-weight:500;color:var(--mut)}
 .ver.warn{color:var(--ambt)}
 th.d{width:52px}
+.ew{padding:7px 0;border-top:1px solid var(--bd)}
+.ew:first-child{border-top:none}
+.ew.down{opacity:.5}
+.eh{font-size:13px}
+.eh b{font-weight:500;color:var(--tx)}
+.tag{display:inline-block;font-size:10px;font-weight:700;border-radius:4px;padding:0 4px;margin-right:4px;vertical-align:1px}
+.tag.h{background:var(--subbg);color:var(--subtx)} .tag.t{background:var(--amb);color:var(--ambt)}
+.busy{font-size:10px;color:var(--ambt);margin-left:4px}
+.el{font-size:12px;color:var(--mut);margin-top:1px}
+.ec{font-size:12px;margin-top:3px;line-height:1.5}
+.ec .w{color:var(--grnt);font-weight:500}
+.you{display:inline-block;font-size:10px;font-weight:700;color:#17162A;background:var(--gold);border-radius:4px;padding:0 4px;margin-left:4px}
+.eopt{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--mut);margin:6px 0 2px;cursor:pointer}
+.eopt input{height:auto;width:auto}
 @media (max-width:480px){.wrap{padding:8px 4px 16px}.card{padding:12px 4px;border-radius:12px}th.d{width:35px}th:last-child,td:last-child{width:28px}h1{font-size:18px}.nav{flex-wrap:nowrap;flex:none}.nav button{height:34px}.nav button[aria-label]{width:32px}#cur{padding:0 8px;font-size:12px}th:first-child,td:first-child{width:auto;padding-left:4px}.c{width:28px;height:26px}.cnt{padding:1px 2px}.top{flex-wrap:nowrap;align-items:flex-start}}
 </style>
 </head>
@@ -93,9 +107,10 @@ th.d{width:52px}
   </div>
   <div id="defbox" class="defbox" style="display:none"></div>
   <details id="bestbox" class="defbox" style="display:none"><summary class="bsum">Guild best defenses <span class="k">(top 3 hero and titan)</span></summary><div id="bestbody"></div></details>
-  <div id="msg">Pick your name, then tap a day: ask off if you hold a signet, or offer to sub if you don't.</div>
+  <div id="msg">Pick your name, then click a day: ask off if you hold a signet, or offer to sub if you don't.</div>
   <table><thead id="hd"></thead><tbody id="bd"></tbody></table>
   <div class="notes" id="notes"></div>
+  <details id="enemybox" class="defbox" style="display:none" open><summary class="bsum" id="enemysum">Today's opponent</summary><div id="enemybody"></div></details>
   <details id="mapbox" style="display:none"><summary id="mapsum">Current map</summary><div class="map" id="map"></div></details>
   <div class="ver" id="ver"></div>
 </div></div>
@@ -127,7 +142,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 </script>
 <script>var INIT = null;</script>
 <script>
-var UI_VERSION = '4.0';
+var UI_VERSION = '4.1';
 var S = null, me = '', busy = false, pending = 0, fresh = false;
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
@@ -228,7 +243,7 @@ function render() {
   }).join('');
 
   var notes = [];
-  if (!s.warriors.length) notes.push('<b>Signet holders not loaded yet.</b> Until MidAm\'s Tweaker sends them, every tap counts as a sub offer.');
+  if (!s.warriors.length) notes.push('<b>Signet holders not loaded yet.</b> Until MidAm\'s Tweaker sends them, every click counts as a sub offer.');
   notes.push('<span class="legend"><span>' + IC.sig + 'holds a signet now (' + s.warriors.length + (s.snapshotAt ? ', as of ' + esc(s.snapshotAt) : '') + ')</span>' +
     '<span>' + IC.on + 'scheduled</span><span>' + IC.out + 'asked off</span><span>' + IC.sub + 'offered to sub</span></span>');
   if (Object.keys(s.power || {}).length) notes.push('H / T = hero and titan GW defense team power.');
@@ -238,6 +253,7 @@ function render() {
   renderMap();
   renderDef();
   renderBest();
+  renderEnemy();
 }
 
 // Guild best: top 3 hero and titan lineups on record, shown to everyone.
@@ -256,6 +272,44 @@ function renderBest() {
   h += '<div class="k" style="margin-top:8px;font-size:11px">Best-holding lineups in real GW and CoW fights over the last 60 days, ours and enemies\' (5+ fights).</div>';
   $('bestbody').innerHTML = h;
   box.style.display = '';
+}
+
+// Today's opponent: enemy walls from MidAm's Tweaker, with earlier meetings and the teams that beat each lineup.
+function renderEnemy() {
+  var s = S, e = s.enemy, box = $('enemybox');
+  var age = s.enemyTs ? Date.now() - s.enemyTs : 1e12;
+  if (!e || !(e.walls || []).length || !s.isCurrent || age > 20 * 3600 * 1000) { box.style.display = 'none'; return; }
+  box.style.display = '';
+  var upOnly = ls.get('gw_enemy_up') === '1';
+  var walls = e.walls.slice().sort(function (a, b) { return ((a.st === 'down') - (b.st === 'down')) || (a.s - b.s); });
+  var down = walls.filter(function (w) { return w.st === 'down'; }).length;
+  $('enemysum').innerHTML = 'Today’s opponent: ' + esc(e.clan || '?') + ' <span class="k">(' + (walls.length - down) + ' of ' + walls.length + ' walls up' +
+    (e.pts ? ', score ' + e.pts[0] + '–' + e.pts[1] : '') + ')</span>';
+  var h = '<div class="k" style="font-size:12px">' + (e.met ? 'Met them ' + e.met + ' time' + (e.met > 1 ? 's' : '') + ' before' + (e.lastMet ? ', last on ' + esc(e.lastMet) : '') + '.' : 'No earlier meeting on record.') +
+    ' Map as of ' + esc(s.enemyAt || '?') + '; walls go down as we attack, so this can be behind.</div>';
+  h += '<label class="eopt"><input type="checkbox" id="eup"' + (upOnly ? ' checked' : '') + '> Walls still up only</label>';
+  walls.forEach(function (w) {
+    if (upOnly && w.st === 'down') return;
+    var c = w.c || [], mine = me ? c.filter(function (x) { return (x.by || []).indexOf(me) >= 0; }) : [];
+    var show = c.slice(0, 3);
+    mine.forEach(function (x) { if (show.indexOf(x) < 0) show.push(x); });
+    var ctr = show.length ? show.map(function (x) {
+      var who = (x.by || []).filter(function (id) { return id !== me; }).map(nm);
+      return '<div><span class="w">' + esc(x.u) + '</span> <span class="k">' + x.w + ' of ' + x.n + ' won' + (x.p ? ', from ' + pfmt(x.p) : '') +
+        (who.length ? ' · ' + esc(who.slice(0, 3).join(', ')) + (who.length > 3 ? ' +' + (who.length - 3) : '') : '') + '</span>' +
+        ((x.by || []).indexOf(me) >= 0 ? '<span class="you">you won with this</span>' : '') + '</div>';
+    }).join('') : '<span class="k">No full-HP win on record' + (w.f0 ? ' (' + w.f0 + ' fights)' : '') + '.</span>';
+    h += '<div class="ew' + (w.st === 'down' ? ' down' : '') + '"><div class="eh"><span class="tag ' + (w.t === 't' ? 't">Titan' : 'h">Hero') + '</span>' +
+      esc(w.f || ('Slot ' + w.s)) + ' · <b>' + esc(w.n) + '</b> <span class="k">' + pfmt(w.pw) + '</span>' +
+      (w.st === 'down' ? ' <span class="k">down</span>' : w.st === 'busy' ? '<span class="busy">being attacked</span>' : '') + '</div>' +
+      (w.u ? '<div class="el">' + esc(w.u) + '</div>' : '') +
+      '<div class="ec"><span class="k">Beaten by:</span> ' + ctr + '</div>' +
+      (w.h ? '<div class="k" style="font-size:11px;margin-top:2px">' + esc(w.h) + '</div>' : '') + '</div>';
+  });
+  h += '<div class="k" style="margin-top:8px;font-size:11px">Beaten by = guildmates’ real GW and CoW wins against this exact lineup, counting only fights that started at full HP. "From" is the lowest team power that won, so check your team is close to it.</div>';
+  $('enemybody').innerHTML = h;
+  var cb = $('eup');
+  if (cb) cb.onchange = function () { ls.set('gw_enemy_up', this.checked ? '1' : ''); renderEnemy(); };
 }
 
 function holdTxt(h, n) {
@@ -342,7 +396,7 @@ $('bd').addEventListener('click', function (e) {
 $('who').addEventListener('change', function () {
   me = this.value; ls.set('gw_me_id', me);
   $('copy').style.display = me ? '' : 'none';
-  say(me ? (S.warriors.indexOf(me) >= 0 ? 'You hold a signet: tap a day to ask off.' : 'Tap a day to offer to sub.') : 'Pick your name first.');
+  say(me ? (S.warriors.indexOf(me) >= 0 ? 'You hold a signet: click a day to ask off.' : 'Click a day to offer to sub.') : 'Pick your name first.');
   render();
 });
 $('pin').addEventListener('change', function () { ls.set('gw_pin', this.value.trim()); });
