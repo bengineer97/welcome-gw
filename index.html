@@ -87,6 +87,14 @@ th.d{width:52px}
 .you{display:inline-block;font-size:10px;font-weight:700;color:#17162A;background:var(--gold);border-radius:4px;padding:0 4px;margin-left:4px}
 .eopt{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--mut);margin:6px 0 2px;cursor:pointer}
 .eopt input{height:auto;width:auto}
+.tm{display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;vertical-align:middle}
+.ic{width:30px;height:30px;border-radius:6px;border:1px solid var(--bd2);background:var(--field);display:block;object-fit:contain}
+.ic.pet{width:24px;height:24px;border-radius:50%;border-color:var(--gold);margin-left:3px}
+.chip{display:inline-block;font-size:12px;line-height:1.2;padding:3px 7px;border-radius:6px;background:var(--field);border:1px solid var(--bd2);color:var(--tx);white-space:nowrap}
+.chip.pet{border-color:var(--gold);color:var(--gold);border-radius:999px;margin-left:3px}
+.top3 li{padding:2px 0}
+.fine{margin:6px 4px 0;font-size:10px;color:var(--dim);line-height:1.5}
+.fine a,.lnk{color:var(--mut);text-decoration:underline;cursor:pointer;background:none;border:none;padding:0;height:auto;font:inherit}
 @media (max-width:480px){.wrap{padding:8px 4px 16px}.card{padding:12px 4px;border-radius:12px}th.d{width:35px}th:last-child,td:last-child{width:28px}h1{font-size:18px}.nav{flex-wrap:nowrap;flex:none}.nav button{height:34px}.nav button[aria-label]{width:32px}#cur{padding:0 8px;font-size:12px}th:first-child,td:first-child{width:auto;padding-left:4px}.c{width:28px;height:26px}.cnt{padding:1px 2px}.top{flex-wrap:nowrap;align-items:flex-start}}
 </style>
 </head>
@@ -113,6 +121,7 @@ th.d{width:52px}
   <details id="enemybox" class="defbox" style="display:none" open><summary class="bsum" id="enemysum">Today's opponent</summary><div id="enemybody"></div></details>
   <details id="mapbox" style="display:none"><summary id="mapsum">Current map</summary><div class="map" id="map"></div></details>
   <div class="ver" id="ver"></div>
+  <div class="fine"><button class="lnk" id="icontog"></button><br>Unofficial fan page. Not affiliated with, supported, sponsored or approved by NEXTERS, which is not responsible for it. Pictures are Hero Wars artwork from Nexters' official Fan Kit; a few load from <a href="https://github.com/rwil02/herowars" target="_blank" rel="noopener">github.com/rwil02/herowars</a>.</div>
 </div></div>
 
 <script>
@@ -143,7 +152,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 <script>var INIT = null;</script>
 <script>
 var UI_VERSION = '4.1';   // must match VERSION in Code.gs
-var UI_BUILD = 'b';        // page-only revision letter, shown in the footer (4.1b = captions say GW + AoC, similar power)
+var UI_BUILD = 'd';        // page-only revision letter, shown in the footer (4.1d = official Fan Kit pictures, titans included)
 var S = null, me = '', busy = false, pending = 0, fresh = false;
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
@@ -164,6 +173,47 @@ function pwLine(id) {
   return p ? '<span class="pw">H <b>' + pfmt(p[0]) + '</b> &#183; T <b>' + pfmt(p[1]) + '</b></span>' : '';
 }
 function nm(id) { return (S && S.names[id]) || ('#' + id); }
+
+// Unit pictures, matched by name: icons.json next to this page (Nexters' official Fan Kit, heroes / titans / pets,
+// 64 px, {"name": "data:image/webp;base64,..."}) first; heroes and pets the kit lacks load from a public helper repo.
+// Anything else, or a picture that fails to load, shows as a name tag.
+var ICON_SRC = 'https://raw.githubusercontent.com/rwil02/herowars/main/Resources/';
+var ICON_OK = /^Avatars\/[A-Za-z0-9_%'.\-]+\.png$/;
+var ICONS = {"chabba":"Avatars/Chabba.png","aurora":"Avatars/Aurora.png","cleaver":"Avatars/Cleaver.png","corvus":"Avatars/Corvus.png","luther":"Avatars/Luther.png","ziri":"Avatars/Ziri.png","rufus":"Avatars/Rufus.png","julius":"Avatars/Julius.png","astaroth":"Avatars/Astaroth.png","mushy and shroom":"Avatars/Mushroom.png","galahad":"Avatars/Galahad.png","kayla":"Avatars/Kayla.png","lyria":"Avatars/Lyria.png","tristan":"Avatars/Tristan.png","ishmael":"Avatars/Ishmael.png","k'arkh":"Avatars/K%27arkh.png","markus":"Avatars/Markus.png","andvari":"Avatars/Andvari.png","yasmine":"Avatars/Yasmine.png","ninja turtles":"Avatars/NinjaTurtles.png","elmir":"Avatars/Elmir.png","qing mao":"Avatars/Qing_Mao.png","satori":"Avatars/Satori.png","alvanor":"Avatars/Alvanor.png","maya":"Avatars/Maya.png","arachne":"Avatars/Arachne.png","dante":"Avatars/Dante.png","krista":"Avatars/Krista.png","keira":"Avatars/Keira.png","judge":"Avatars/Judge.png","morrigan":"Avatars/Morrigan.png","celeste":"Avatars/Celeste.png","amira":"Avatars/Amira.png","kai":"Avatars/Kai.png","isaac":"Avatars/Isaac.png","jhu":"Avatars/Jhu.png","nebula":"Avatars/Nebula.png","sebastian":"Avatars/Sebastian.png","mojo":"Avatars/Mojo.png","heidi":"Avatars/Heidi.png","jorgen":"Avatars/Jorgen.png","orion":"Avatars/Orion.png","folio":"Avatars/Folio.png","ginger":"Avatars/Ginger.png","daredevil":"Avatars/Daredevil.png","lara croft":"Avatars/LaraCroft.png","dark star":"Avatars/Dark_Star.png","lars":"Avatars/Lars.png","augustus":"Avatars/Augustus.png","astrid and lucas":"Avatars/Astrid.png","aidan":"Avatars/Aidan.png","iris":"Avatars/Iris.png","cornelius":"Avatars/Cornelius.png","faceless":"Avatars/Faceless.png","fox":"Avatars/Fox.png","lian":"Avatars/Lian.png","phobos":"Avatars/Phobos.png","artemis":"Avatars/Artemis.png","dorian":"Avatars/Dorian.png","polaris":"Avatars/Polaris.png","peppy":"Avatars/Peppy.png","jet":"Avatars/Jet.png","thea":"Avatars/Thea.png","fafnir":"Avatars/Fafnir.png","helios":"Avatars/Helios.png","lilith":"Avatars/Lilith.png","martha":"Avatars/Martha.png","guus":"Avatars/Guus.png","cascade":"Avatars/Cascade.png","electra von grave":"Avatars/Electra_von_Grave.png","fluffy":"Avatars/Fluffy.png","byrna":"Avatars/Byrna.png","adam":"Avatars/Adam.png","somna":"Avatars/Somna.png","eva":"Avatars/Eva.png","wodryn":"Avatars/Wodryn.png","fenris":"Avatars/Fenris.png","oliver":"Avatars/Oliver.png","merlin":"Avatars/Merlin.png","mara":"Avatars/Mara.png","cain":"Avatars/Cain.png","albus":"Avatars/Albus.png","axel":"Avatars/Axel.png","biscuit":"Avatars/Biscuit.png","khorus":"Avatars/Khorus.png","vex":"Avatars/Vex.png","robin":"Avatars/Robin.png"};
+var ICON_DATA = {};
+var DATA_OK = /^data:image\/(webp|png);base64,[A-Za-z0-9+\/=]+$/;
+function iconKey(n) { return String(n).toLowerCase().replace(/[\u2018\u2019]/g, "'").trim(); }
+function icErr(el) { var c = document.createElement('span'); c.className = 'chip' + (el.classList.contains('pet') ? ' pet' : ''); c.textContent = el.alt; el.replaceWith(c); }
+function unitHtml(n, pet) {
+  var names = ls.get('gw_names') === '1', k = iconKey(n);
+  var img = names ? '' : (ICON_DATA[k] || (ICONS[k] ? ICON_SRC + ICONS[k] : ''));
+  return img ? '<img class="ic' + (pet ? ' pet' : '') + '" src="' + img + '" alt="' + esc(n) + '" title="' + esc(n) + '" loading="lazy" onerror="icErr(this)">'
+             : '<span class="chip' + (pet ? ' pet' : '') + '">' + esc(n) + '</span>';
+}
+// "A, B, C + Pet" (as Tweaker sends it) -> pictures / name tags
+function teamHtml(u) {
+  if (!u) return '';
+  u = String(u);
+  var i = u.lastIndexOf(' + '), pet = i >= 0 ? u.slice(i + 3) : '', list = (i >= 0 ? u.slice(0, i) : u).split(', ').filter(Boolean);
+  return '<span class="tm">' + list.map(function (n) { return unitHtml(n, false); }).join('') + (pet ? unitHtml(pet, true) : '') + '</span>';
+}
+(function () {
+  try { var c = JSON.parse(ls.get('gw_icons') || 'null'); if (c && typeof c === 'object') Object.keys(c).forEach(function (k) { if (ICON_OK.test(c[k])) ICONS[k] = c[k]; }); } catch (e) {}
+  fetch(ICON_SRC + 'heros.json').then(function (r) { return r.json(); }).then(function (a) {
+    var m = {}, n = 0;
+    (Array.isArray(a) ? a : []).forEach(function (x) { if (x && x.name && ICON_OK.test(String(x.image || ''))) { m[iconKey(x.name)] = String(x.image); n++; } });
+    if (n < 20) return;
+    var fresh = Object.keys(m).some(function (k) { return ICONS[k] !== m[k]; });
+    Object.keys(m).forEach(function (k) { ICONS[k] = m[k]; });
+    ls.set('gw_icons', JSON.stringify(m));
+    if (fresh && S) render();
+  }).catch(function () {});
+  fetch('icons.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (o) {
+    var n = 0;
+    Object.keys(o || {}).forEach(function (k) { var v = String(o[k]); if (v.length < 60000 && DATA_OK.test(v)) { ICON_DATA[iconKey(k)] = v; n++; } });
+    if (n && S) render();
+  }).catch(function () {});
+})();
 
 function call(fn, args, okMsg) {
   if (busy) return;
@@ -264,7 +314,7 @@ function renderBest() {
   var list = function (arr) {
     return '<ol class="top3">' + arr.map(function (x) {
       var who = (x.users || []).length ? 'run by ' + x.users.map(esc).join(', ') : 'seen on enemies';
-      return '<li>' + esc(x.u) + ' &#183; ' + holdTxt(x.held, x.n) + ' <span class="k">&#183; ' + who + '</span></li>';
+      return '<li>' + teamHtml(x.u) + ' &#183; ' + holdTxt(x.held, x.n) + ' <span class="k">&#183; ' + who + '</span></li>';
     }).join('') + '</ol>';
   };
   var h = '';
@@ -296,14 +346,14 @@ function renderEnemy() {
     mine.forEach(function (x) { if (show.indexOf(x) < 0) show.push(x); });
     var ctr = show.length ? show.map(function (x) {
       var who = (x.by || []).filter(function (id) { return id !== me; }).map(nm);
-      return '<div><span class="w">' + esc(x.u) + '</span> <span class="k">' + x.w + ' of ' + x.n + ' won' + (x.p ? ', from ' + pfmt(x.p) : '') +
+      return '<div style="margin-top:3px">' + teamHtml(x.u) + ' <span class="k">' + x.w + ' of ' + x.n + ' won' + (x.p ? ', from ' + pfmt(x.p) : '') +
         (who.length ? ' · ' + esc(who.slice(0, 3).join(', ')) + (who.length > 3 ? ' +' + (who.length - 3) : '') : '') + '</span>' +
         ((x.by || []).indexOf(me) >= 0 ? '<span class="you">you won with this</span>' : '') + '</div>';
     }).join('') : '<span class="k">No full-HP win on record' + (w.f0 ? ' (' + w.f0 + ' fights)' : '') + '.</span>';
     h += '<div class="ew' + (w.st === 'down' ? ' down' : '') + '"><div class="eh"><span class="tag ' + (w.t === 't' ? 't">Titan' : 'h">Hero') + '</span>' +
       esc(w.f || ('Slot ' + w.s)) + ' · <b>' + esc(w.n) + '</b> <span class="k">' + pfmt(w.pw) + '</span>' +
       (w.st === 'down' ? ' <span class="k">down</span>' : w.st === 'busy' ? '<span class="busy">being attacked</span>' : '') + '</div>' +
-      (w.u ? '<div class="el">' + esc(w.u) + '</div>' : '') +
+      (w.u ? '<div class="el" style="margin:3px 0">' + teamHtml(w.u) + '</div>' : '') +
       '<div class="ec"><span class="k">Beaten by:</span> ' + ctr + '</div>' +
       (w.h ? '<div class="k" style="font-size:11px;margin-top:2px">' + esc(w.h) + '</div>' : '') + '</div>';
   });
@@ -338,11 +388,11 @@ function renderDef() {
         return;
       }
       var h = '<div class="dl"><span class="k">' + k[1] + (myPow ? ' (' + pfmt(myPow[k[2]]) + ')' : '') + ':</span> ' +
-        (o.cur ? esc(o.cur.u) + ' &#183; ' + holdTxt(o.cur.held, o.cur.n) : '<span class="k">none on record</span>');
+        (o.cur ? teamHtml(o.cur.u) + ' &#183; ' + holdTxt(o.cur.held, o.cur.n) : '<span class="k">none on record</span>');
       if (o.sug) {
-        h += '<br><span class="try">Try: ' + esc(o.sug.u) + '</span> &#183; ' + holdTxt(o.sug.held, o.sug.n) +
+        h += '<div style="margin-top:4px"><span class="try">Try:</span> ' + teamHtml(o.sug.u) + ' &#183; ' + holdTxt(o.sug.held, o.sug.n) +
           (o.sug.weak ? ' <span class="k">(your units are a bit under the usual power for it)</span>' : '') +
-          (o.sug.noPet ? ' <span class="k">(pet not seen on you)</span>' : '');
+          (o.sug.noPet ? ' <span class="k">(pet not seen on you)</span>' : '') + '</div>';
       } else if (o.cur) h += ' <span class="k">&#183; no better lineup found</span>';
       parts.push(h + '</div>');
     });
@@ -410,6 +460,10 @@ $('copy').addEventListener('click', function () {
 $('prev').onclick = function () { load(S.prev); };
 $('next').onclick = function () { load(S.next); };
 $('cur').onclick = function () { load(''); };
+
+function iconTog() { $('icontog').textContent = ls.get('gw_names') === '1' ? 'Show pictures' : 'Show names instead of pictures'; }
+$('icontog').onclick = function () { ls.set('gw_names', ls.get('gw_names') === '1' ? '' : '1'); iconTog(); if (S) render(); };
+iconTog();
 
 $('pin').value = ls.get('gw_pin');
 if (INIT && INIT.ok) got(INIT);
