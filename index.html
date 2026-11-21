@@ -142,7 +142,8 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 </script>
 <script>var INIT = null;</script>
 <script>
-var UI_VERSION = '4.1';
+var UI_VERSION = '4.1';   // must match VERSION in Code.gs
+var UI_BUILD = 'b';        // page-only revision letter, shown in the footer (4.1b = captions say GW + AoC, similar power)
 var S = null, me = '', busy = false, pending = 0, fresh = false;
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
@@ -193,8 +194,8 @@ function got(s, stale) {
     (s.lastChange ? ' · last change: ' + s.lastChange.name + ', ' + s.lastChange.at : '') + (stale ? ' · updating…' : '');
   $('pin').style.display = s.pinRequired ? '' : 'none';
   var v = $('ver');
-  if (s.version && s.version !== UI_VERSION) { v.className = 'ver warn'; v.textContent = 'page v' + UI_VERSION + ' \u00b7 server v' + s.version + ': versions differ, update the page on GitHub or Code.gs in Apps Script.'; }
-  else { v.className = 'ver'; v.textContent = 'page v' + UI_VERSION + ' \u00b7 server v' + (s.version || '?'); }
+  if (s.version && s.version !== UI_VERSION) { v.className = 'ver warn'; v.textContent = 'page v' + UI_VERSION + UI_BUILD + ' \u00b7 server v' + s.version + ': versions differ, update the page on GitHub or Code.gs in Apps Script.'; }
+  else { v.className = 'ver'; v.textContent = 'page v' + UI_VERSION + UI_BUILD + ' \u00b7 server v' + (s.version || '?'); }
 
   var keep = me || ls.get('gw_me_id');
   var opts = s.roster.slice().sort(function (a, b) { return nm(a).localeCompare(nm(b)); });
