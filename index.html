@@ -28,13 +28,22 @@ button:hover{border-color:var(--mebd)}
 .nav button[aria-label]{width:36px;padding:0;font-size:18px}
 #msg{min-height:20px;font-size:13px;margin:10px 4px 8px;color:var(--mut)}
 #msg.err{color:var(--outtx)} #msg.ok{color:var(--grnt)}
+#gerr{font-size:13px;margin:8px 4px 0;color:var(--outtx)}
+#gerr:empty{display:none}
+.tabs{display:flex;flex-wrap:wrap;gap:2px;margin:12px 4px 0;border-bottom:1px solid var(--bd2)}
+.tab{height:44px;padding:0 14px;background:transparent;border:none;border-bottom:3px solid transparent;border-radius:0;margin-bottom:-1px;color:var(--mut);font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.tab[aria-selected="true"]{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+.tab:hover{border-color:transparent;color:var(--tx)}
+.tab[aria-selected="true"]:hover{border-bottom-color:var(--gold);color:var(--gold)}
+.badge{font-size:10px;font-weight:700;padding:1px 5px;border-radius:5px;background:var(--amb);color:var(--ambt)}
+.pane[hidden]{display:none}
 table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
 th,td{padding:3px 1px;text-align:center;border-bottom:1px solid var(--bd)}
 thead th{border-bottom:1px solid var(--bd2);padding-bottom:6px}
-th:first-child,td:first-child{text-align:left;width:34%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:6px}
-th:last-child,td:last-child{width:8%;color:var(--dim)}
+#sig table th:first-child,#sig table td:first-child{text-align:left;width:34%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:6px}
+#sig table th:last-child,#sig table td:last-child{width:8%;color:var(--dim)}
 th{font-weight:700;vertical-align:bottom;color:var(--tx)}
-th:first-child,th:last-child{color:var(--mut)}
+#sig table th:first-child,#sig table th:last-child{color:var(--mut)}
 th.today{color:var(--gold)}
 .cnt{display:inline-block;font-size:9px;font-weight:500;line-height:1.25;padding:1px 4px;border-radius:5px}
 .red{background:var(--red);color:var(--redt)} .amb{background:var(--amb);color:var(--ambt)} .grn{background:var(--grn);color:var(--grnt)}
@@ -60,8 +69,10 @@ summary{cursor:pointer;color:var(--mut)}
 .ver{margin:12px 4px 0;font-size:11px;color:var(--dim)}
 .defbox{margin:12px 4px 0;padding:12px 14px;border:1px solid var(--bd2);border-radius:10px;background:#211F3B}
 .defbox h3{margin:0 0 4px;font-size:13px;font-weight:700;color:var(--gold)}
+.sec{margin:16px 4px 0;font-size:15px;font-weight:700;color:var(--gold)}
+.sec .k{font-size:13px;font-weight:400}
 .dl{font-size:13px;line-height:1.55;margin-top:6px}
-.dl .k,.defbox .k{color:var(--mut)}
+.dl .k,.defbox .k,.k{color:var(--mut)}
 .lab{color:var(--gold);font-weight:500}
 .try{color:var(--subtx)}
 .hold{font-weight:700}
@@ -73,7 +84,7 @@ summary{cursor:pointer;color:var(--mut)}
 .pw b{font-weight:500;color:var(--mut)}
 .ver.warn{color:var(--ambt)}
 th.d{width:52px}
-.ew{padding:7px 0;border-top:1px solid var(--bd)}
+.ew{padding:8px 0;border-top:1px solid var(--bd)}
 .ew:first-child{border-top:none}
 .ew.down{opacity:.5}
 .eh{font-size:13px}
@@ -87,7 +98,8 @@ th.d{width:52px}
 .you{display:inline-block;font-size:10px;font-weight:700;color:#17162A;background:var(--gold);border-radius:4px;padding:0 4px;margin-left:4px}
 .eopt{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--mut);margin:6px 0 2px;cursor:pointer}
 .eopt input{height:auto;width:auto}
-.tm{display:inline-flex;flex-wrap:nowrap;gap:3px;align-items:center;vertical-align:middle}
+.tm{display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;vertical-align:middle}
+.ag>div,.tgrid>div,.cgrid>div{min-width:0}
 :root{--ic:clamp(26px,4.6vw,34px)}
 .tgrid{display:grid;grid-template-columns:max-content max-content 1fr;gap:6px 10px;align-items:center;margin-top:8px}
 .tgrid .gl{color:var(--mut);font-size:13px;line-height:1.25;white-space:nowrap}
@@ -104,13 +116,46 @@ th.d{width:52px}
 .top3 li{padding:2px 0}
 .fine{margin:6px 4px 0;font-size:10px;color:var(--dim);line-height:1.5}
 .fine a,.lnk{color:var(--mut);text-decoration:underline;cursor:pointer;background:none;border:none;padding:0;height:auto;font:inherit}
-@media (max-width:480px){.tgrid:not(.tbest){grid-template-columns:max-content 1fr}.tgrid:not(.tbest) .gl{grid-column:1/-1;margin-bottom:-3px}.tbest{grid-template-columns:max-content 1fr;gap:3px 8px}.tbest .gs{grid-column:2;font-size:12px;margin-bottom:4px}.cgrid{grid-template-columns:1fr}.wrap{padding:8px 4px 16px}.card{padding:12px 4px;border-radius:12px}th.d{width:35px}th:last-child,td:last-child{width:28px}h1{font-size:18px}.nav{flex-wrap:nowrap;flex:none}.nav button{height:34px}.nav button[aria-label]{width:32px}#cur{padding:0 8px;font-size:12px}th:first-child,td:first-child{width:auto;padding-left:4px}.c{width:28px;height:26px}.cnt{padding:1px 2px}.top{flex-wrap:nowrap;align-items:flex-start}}
+/* Results */
+.rhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.strip{display:grid;grid-template-columns:repeat(var(--nd,5),minmax(0,1fr));gap:6px;margin-top:10px}
+.dbtn{height:52px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:1px solid var(--bd2);border-radius:8px;background:var(--field)}
+.dbtn .dn{font-size:12px;color:var(--mut)}
+.dbtn.sel{background:var(--me);border:2px solid var(--gold)}
+.dbtn.sel .dn{color:var(--tx);font-weight:500}
+.dbtn.now{border-style:dashed}
+.dbtn.now .dn{color:var(--gold)}
+.dbtn.none{background:transparent;color:var(--dim)}
+.res{font-size:11px;font-weight:700;padding:1px 6px;border-radius:5px;letter-spacing:.03em}
+.res.w{background:var(--grn);color:var(--grnt)} .res.l{background:var(--red);color:var(--redt)} .res.n{background:var(--bd2);color:var(--mut)}
+.rbox{margin-top:12px;padding:12px;border-radius:8px;background:var(--card);border:1px solid var(--bd)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.tile{padding:8px 10px;border-radius:8px;background:var(--field)}
+.tile .tl{font-size:11px;color:var(--mut)}
+.tile .tv{font-size:17px;font-weight:700;margin-top:2px}
+.tile .tv small{font-size:12px;font-weight:400;color:var(--mut)}
+.shout{margin-top:12px;font-size:13px;line-height:1.6}
+.bars{display:flex;align-items:flex-end;gap:3px;height:64px;margin-top:6px}
+.bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.bar i{display:block;width:100%;background:var(--subbd);border-radius:3px 3px 0 0;min-height:1px}
+.bar i.late{background:var(--gold)}
+.blab{display:flex;gap:3px;margin-top:3px}
+.blab span{flex:1;text-align:center;font-size:10px;color:var(--dim);white-space:nowrap;overflow:hidden}
+.mt{table-layout:auto}
+.mt th,.mt td{padding:4px 6px}
+.mt th:first-child,.mt td:first-child{text-align:left}
+.mt th{color:var(--mut);font-weight:500}
+.ag{display:grid;grid-template-columns:max-content max-content 1fr;gap:6px 10px;align-items:center;margin-top:6px}
+.ag .gl{color:var(--mut);font-size:13px}
+.ag .gs{font-size:12px;line-height:1.4}
+.near{display:inline-block;font-size:10px;font-weight:700;color:var(--subtx);background:var(--subbg);border-radius:4px;padding:0 4px;margin-left:4px}
+@media (max-width:480px){.tgrid:not(.tbest){grid-template-columns:max-content 1fr}.tgrid:not(.tbest) .gl{grid-column:1/-1;margin-bottom:-3px}.tbest{grid-template-columns:max-content 1fr;gap:3px 8px}.tbest .gs{grid-column:2;font-size:12px;margin-bottom:4px}.cgrid{grid-template-columns:1fr}.ag{grid-template-columns:max-content 1fr}.ag .gs{grid-column:2;margin-bottom:4px}.wrap{padding:8px 4px 16px}.card{padding:12px 4px;border-radius:12px}th.d{width:35px}#sig table th:last-child,#sig table td:last-child{width:28px}h1{font-size:18px}.nav{flex-wrap:nowrap;flex:none}.nav button{height:34px}.nav button[aria-label]{width:32px}#cur{padding:0 8px;font-size:12px}#sig table th:first-child,#sig table td:first-child{width:auto;padding-left:4px}.c{width:28px;height:26px}.cnt{padding:1px 2px}.top{flex-wrap:nowrap;align-items:flex-start}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tab{padding:0 10px}}
 </style>
 </head>
 <body>
 <div class="wrap"><div class="card">
   <div class="row top">
-    <div><h1 id="title">GW champions</h1><div class="sub" id="wklabel">Loading the schedule…</div></div>
+    <div><h1 id="title">GW champions</h1><div class="sub" id="wklabel">Loading…</div></div>
     <div class="row nav">
       <button id="prev" aria-label="Previous week">&#8249;</button>
       <button id="cur">This week</button>
@@ -118,17 +163,40 @@ th.d{width:52px}
     </div>
   </div>
   <div class="row">
+    <label for="who" style="position:absolute;left:-9999px">Who are you?</label>
     <select id="who"><option value="">Who are you?</option></select>
-    <input id="pin" type="password" placeholder="Guild PIN" style="width:110px;display:none">
+    <input id="pin" type="password" placeholder="Guild PIN" aria-label="Guild PIN" style="width:110px;display:none">
     <button id="copy" style="display:none">Same as last week</button>
   </div>
-  <div id="defbox" class="defbox" style="display:none"></div>
-  <details id="bestbox" class="defbox" style="display:none"><summary class="bsum">Guild best defenses <span class="k">(top 3 hero and titan)</span></summary><div id="bestbody"></div></details>
-  <div id="msg">Pick your name, then click a day: ask off if you hold a signet, or offer to sub if you don't.</div>
-  <table><thead id="hd"></thead><tbody id="bd"></tbody></table>
-  <div class="notes" id="notes"></div>
-  <details id="enemybox" class="defbox" style="display:none" open><summary class="bsum" id="enemysum">Today's opponent</summary><div id="enemybody"></div></details>
-  <details id="mapbox" style="display:none"><summary id="mapsum">Current map</summary><div class="map" id="map"></div></details>
+  <div id="gerr"></div>
+  <div class="tabs" role="tablist" aria-label="Page sections">
+    <button class="tab" role="tab" id="t-res" data-tab="res" aria-controls="res">Results</button>
+    <button class="tab" role="tab" id="t-rec" data-tab="rec" aria-controls="rec">Recommendations</button>
+    <button class="tab" role="tab" id="t-sig" data-tab="sig" aria-controls="sig">Schedule <span class="badge" id="sigbadge" style="display:none"></span></button>
+  </div>
+
+  <div class="pane" id="res" role="tabpanel" aria-labelledby="t-res">
+    <div id="resbody"><p class="k" style="margin:12px 4px">Loading…</p></div>
+  </div>
+
+  <div class="pane" id="rec" role="tabpanel" aria-labelledby="t-rec" hidden>
+    <div class="sec">Defend</div>
+    <div id="pickhint" class="notes" style="display:none">Pick your name above to see your own defense.</div>
+    <div id="defbox" class="defbox" style="display:none"></div>
+    <details id="bestbox" class="defbox" style="display:none"><summary class="bsum">Guild best defenses <span class="k">(top 3 hero and titan)</span></summary><div id="bestbody"></div></details>
+    <div class="sec">Attack</div>
+    <details id="enemybox" class="defbox" style="display:none" open><summary class="bsum" id="enemysum">Today's opponent</summary><div id="enemybody"></div></details>
+    <details id="atkbox" class="defbox" style="display:none" open><summary class="bsum">Good attack teams <span class="k">(any wall)</span></summary><div id="atkbody"></div></details>
+    <div id="noatk" class="notes" style="display:none">No attack data yet. MidAm's Tweaker sends it after the next war day.</div>
+  </div>
+
+  <div class="pane" id="sig" role="tabpanel" aria-labelledby="t-sig" hidden>
+    <div id="msg">Pick your name, then click a day: ask off if you hold a signet, or offer to sub if you don't.</div>
+    <table><thead id="hd"></thead><tbody id="bd"></tbody></table>
+    <div class="notes" id="notes"></div>
+    <details id="mapbox" style="display:none"><summary id="mapsum">Current map</summary><div class="map" id="map"></div></details>
+  </div>
+
   <div class="ver" id="ver"></div>
   <div class="fine"><button class="lnk" id="icontog"></button><br>Unofficial fan page. Not affiliated with, supported, sponsored or approved by NEXTERS, which is not responsible for it. Pictures are Hero Wars artwork from Nexters' official Fan Kit; a few load from <a href="https://github.com/rwil02/herowars" target="_blank" rel="noopener">github.com/rwil02/herowars</a>.</div>
 </div></div>
@@ -160,9 +228,12 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 </script>
 <script>var INIT = null;</script>
 <script>
-var UI_VERSION = '4.1';   // must match VERSION in Code.gs
-var UI_BUILD = 'j';        // page-only revision letter, shown in the footer (4.1j = defense records 'on 850k-1.50M walls' (or '850k+'); needs Tweaker 018)
+var UI_VERSION = '4.2';   // must match VERSION in Code.gs
+var UI_BUILD = 'a';        // page-only revision letter, shown in the footer (4.2 = Results / Recommendations / Schedule tabs; needs Tweaker 026; 4.2a = tab renamed Schedule)
 var S = null, me = '', busy = false, pending = 0, fresh = false;
+var Q = (function () { try { return new URLSearchParams(location.search); } catch (e) { return { get: function () { return null; } }; } })();
+var TAB = ({ res: 1, rec: 1, sig: 1 })[Q.get('tab')] ? Q.get('tab') : 'res';
+var SEL = /^\d{4}-\d{2}-\d{2}$/.test(Q.get('d') || '') ? Q.get('d') : '';   // selected war day (date) on the Results tab
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
   on: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4E89F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
@@ -175,13 +246,14 @@ var ls = {
 };
 var $ = function (id) { return document.getElementById(id); };
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-function say(t, cls) { var m = $('msg'); m.textContent = t; m.className = cls || ''; }
+function say(t, cls) { var m = $('msg'); m.textContent = t; m.className = cls || ''; $('gerr').textContent = cls === 'err' && TAB !== 'sig' ? t : ''; }
 function pfmt(n) { return !n ? '-' : n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : Math.round(n / 1000) + 'k'; }
 function pwLine(id) {
   var p = (S && S.power || {})[id];
   return p ? '<span class="pw">H <b>' + pfmt(p[0]) + '</b> &#183; T <b>' + pfmt(p[1]) + '</b></span>' : '';
 }
 function nm(id) { return (S && S.names[id]) || ('#' + id); }
+function list(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
 
 // Unit pictures, matched by name: icons.json next to this page (Nexters' official Fan Kit, heroes / titans / pets,
 // 64 px, {"name": "data:image/webp;base64,..."}) first; heroes and pets the kit lacks load from a public helper repo.
@@ -191,7 +263,7 @@ var ICON_OK = /^Avatars\/[A-Za-z0-9_%'.\-]+\.png$/;
 var ICONS = {"chabba":"Avatars/Chabba.png","aurora":"Avatars/Aurora.png","cleaver":"Avatars/Cleaver.png","corvus":"Avatars/Corvus.png","luther":"Avatars/Luther.png","ziri":"Avatars/Ziri.png","rufus":"Avatars/Rufus.png","julius":"Avatars/Julius.png","astaroth":"Avatars/Astaroth.png","mushy and shroom":"Avatars/Mushroom.png","galahad":"Avatars/Galahad.png","kayla":"Avatars/Kayla.png","lyria":"Avatars/Lyria.png","tristan":"Avatars/Tristan.png","ishmael":"Avatars/Ishmael.png","k'arkh":"Avatars/K%27arkh.png","markus":"Avatars/Markus.png","andvari":"Avatars/Andvari.png","yasmine":"Avatars/Yasmine.png","ninja turtles":"Avatars/NinjaTurtles.png","elmir":"Avatars/Elmir.png","qing mao":"Avatars/Qing_Mao.png","satori":"Avatars/Satori.png","alvanor":"Avatars/Alvanor.png","maya":"Avatars/Maya.png","arachne":"Avatars/Arachne.png","dante":"Avatars/Dante.png","krista":"Avatars/Krista.png","keira":"Avatars/Keira.png","judge":"Avatars/Judge.png","morrigan":"Avatars/Morrigan.png","celeste":"Avatars/Celeste.png","amira":"Avatars/Amira.png","kai":"Avatars/Kai.png","isaac":"Avatars/Isaac.png","jhu":"Avatars/Jhu.png","nebula":"Avatars/Nebula.png","sebastian":"Avatars/Sebastian.png","mojo":"Avatars/Mojo.png","heidi":"Avatars/Heidi.png","jorgen":"Avatars/Jorgen.png","orion":"Avatars/Orion.png","folio":"Avatars/Folio.png","ginger":"Avatars/Ginger.png","daredevil":"Avatars/Daredevil.png","lara croft":"Avatars/LaraCroft.png","dark star":"Avatars/Dark_Star.png","lars":"Avatars/Lars.png","augustus":"Avatars/Augustus.png","astrid and lucas":"Avatars/Astrid.png","aidan":"Avatars/Aidan.png","iris":"Avatars/Iris.png","cornelius":"Avatars/Cornelius.png","faceless":"Avatars/Faceless.png","fox":"Avatars/Fox.png","lian":"Avatars/Lian.png","phobos":"Avatars/Phobos.png","artemis":"Avatars/Artemis.png","dorian":"Avatars/Dorian.png","polaris":"Avatars/Polaris.png","peppy":"Avatars/Peppy.png","jet":"Avatars/Jet.png","thea":"Avatars/Thea.png","fafnir":"Avatars/Fafnir.png","helios":"Avatars/Helios.png","lilith":"Avatars/Lilith.png","martha":"Avatars/Martha.png","guus":"Avatars/Guus.png","cascade":"Avatars/Cascade.png","electra von grave":"Avatars/Electra_von_Grave.png","fluffy":"Avatars/Fluffy.png","byrna":"Avatars/Byrna.png","adam":"Avatars/Adam.png","somna":"Avatars/Somna.png","eva":"Avatars/Eva.png","wodryn":"Avatars/Wodryn.png","fenris":"Avatars/Fenris.png","oliver":"Avatars/Oliver.png","merlin":"Avatars/Merlin.png","mara":"Avatars/Mara.png","cain":"Avatars/Cain.png","albus":"Avatars/Albus.png","axel":"Avatars/Axel.png","biscuit":"Avatars/Biscuit.png","khorus":"Avatars/Khorus.png","vex":"Avatars/Vex.png","robin":"Avatars/Robin.png"};
 var ICON_DATA = {};
 var DATA_OK = /^data:image\/(webp|png);base64,[A-Za-z0-9+\/=]+$/;
-function iconKey(n) { return String(n).toLowerCase().replace(/[\u2018\u2019]/g, "'").trim(); }
+function iconKey(n) { return String(n).toLowerCase().replace(/[‘’]/g, "'").trim(); }
 function icErr(el) { var c = document.createElement('span'); c.className = 'chip' + (el.classList.contains('pet') ? ' pet' : ''); c.textContent = el.alt; el.replaceWith(c); }
 function unitHtml(n, pet) {
   var names = ls.get('gw_names') === '1', k = iconKey(n);
@@ -243,29 +315,74 @@ function load(week, quiet) {
 function got(s, stale) {
   S = s;
   fresh = !stale;
-  if (!stale) ls.set('gw_cache', JSON.stringify(s));
+  if (!stale && s.isCurrent) ls.set('gw_cache', JSON.stringify(s));
+  if (!stale) $('gerr').textContent = '';
   $('title').textContent = s.title;
   document.title = s.title;
   var p = s.week.split('-');
   var d = new Date(+p[0], +p[1] - 1, +p[2]);
   $('wklabel').textContent = 'Week of ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) +
-    (s.isCurrent ? ' (this week)' : '') + (s.league ? ' · ' + (s.league === 1 ? 'gold' : 'silver') + ' league' : '') +
-    (s.lastChange ? ' · last change: ' + s.lastChange.name + ', ' + s.lastChange.at : '') + (stale ? ' · updating…' : '');
-  $('pin').style.display = s.pinRequired ? '' : 'none';
+    (s.isCurrent ? ' (this week)' : '') + (s.league ? ' · ' + (s.league === 1 ? 'gold' : 'silver') + ' league' : '') + (stale ? ' · updating…' : '');
+  $('pin').style.display = s.pinRequired && TAB === 'sig' ? '' : 'none';
   var v = $('ver');
-  if (s.version && s.version !== UI_VERSION) { v.className = 'ver warn'; v.textContent = 'page v' + UI_VERSION + UI_BUILD + ' \u00b7 server v' + s.version + ': versions differ, update the page on GitHub or Code.gs in Apps Script.'; }
-  else { v.className = 'ver'; v.textContent = 'page v' + UI_VERSION + UI_BUILD + ' \u00b7 server v' + (s.version || '?'); }
+  if (s.version && s.version !== UI_VERSION) { v.className = 'ver warn'; v.textContent = 'page v' + UI_VERSION + UI_BUILD + ' · server v' + s.version + ': versions differ, update the page on GitHub or Code.gs in Apps Script.'; }
+  else { v.className = 'ver'; v.textContent = 'page v' + UI_VERSION + UI_BUILD + ' · server v' + (s.version || '?'); }
 
   var keep = me || ls.get('gw_me_id');
   var opts = s.roster.slice().sort(function (a, b) { return nm(a).localeCompare(nm(b)); });
   $('who').innerHTML = '<option value="">Who are you?</option>' +
     opts.map(function (id) { return '<option value="' + esc(id) + '"' + (id === keep ? ' selected' : '') + '>' + esc(nm(id)) + '</option>'; }).join('');
   me = s.roster.indexOf(keep) >= 0 ? keep : '';
-  $('copy').style.display = me ? '' : 'none';
   render();
 }
 
+// ---------- tabs ----------
+function setTab(t, push) {
+  TAB = t;
+  ['res', 'rec', 'sig'].forEach(function (k) {
+    $(k).hidden = k !== t;
+    $('t-' + k).setAttribute('aria-selected', k === t ? 'true' : 'false');
+    $('t-' + k).tabIndex = k === t ? 0 : -1;
+  });
+  $('copy').style.display = me && t === 'sig' ? '' : 'none';
+  $('pin').style.display = S && S.pinRequired && t === 'sig' ? '' : 'none';
+  if (t === 'sig') $('gerr').textContent = '';
+  if (push) setUrl();
+}
+function setUrl() {
+  try {
+    var q = [];
+    if (TAB !== 'res') q.push('tab=' + TAB);
+    if (TAB === 'res' && SEL) q.push('d=' + SEL);
+    history.replaceState(null, '', location.pathname + (q.length ? '?' + q.join('&') : ''));
+  } catch (e) {}
+}
+Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (b) {
+  b.addEventListener('click', function () { setTab(b.dataset.tab, true); });
+  b.addEventListener('keydown', function (e) {
+    var order = ['res', 'rec', 'sig'], i = order.indexOf(b.dataset.tab);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      var n = order[(i + (e.key === 'ArrowRight' ? 1 : 2)) % 3];
+      setTab(n, true); $('t-' + n).focus(); e.preventDefault();
+    }
+  });
+});
+
 function render() {
+  renderSignup();
+  renderRes();
+  renderDef();
+  renderBest();
+  renderEnemy();
+  renderAtk();
+  var hasAtk = $('enemybox').style.display !== 'none' || $('atkbox').style.display !== 'none';
+  $('noatk').style.display = hasAtk ? 'none' : '';
+  $('pickhint').style.display = me ? 'none' : '';
+  setTab(TAB, false);
+}
+
+// ---------- Schedule tab ----------
+function renderSignup() {
   var s = S, days = s.days, need = days.length ? days[0].need : 15;
   var isHolder = function (id) { return s.warriors.indexOf(id) >= 0; };
   var ids = s.roster.slice();
@@ -285,6 +402,16 @@ function render() {
       (d.note ? '<span class="star">*</span>' : '') + '</span>' +
       '<span class="cnt ' + k + '"><span class="mini">' + outs[i] + ' out</span><span class="mini">' + subs[i] + ' sub</span></span></div></th>';
   }).join('') + '<th>Days</th></tr>';
+
+  // Tab badge: the first day from today on that is short of subs (this week only).
+  var order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], ti = order.indexOf(s.today), badge = '';
+  if (s.isCurrent) days.some(function (d, i) {
+    var short = outs[i] - subs[i];
+    if (order.indexOf(d.day) >= ti && short > 0 && !d.note) { badge = d.day + ' needs ' + short + ' sub' + (short > 1 ? 's' : ''); return true; }
+    return false;
+  });
+  $('sigbadge').textContent = badge;
+  $('sigbadge').style.display = badge ? '' : 'none';
 
   if (me) ids = [me].concat(ids.filter(function (id) { return id !== me; }));
   $('bd').innerHTML = ids.map(function (id) {
@@ -311,11 +438,131 @@ function render() {
   days.filter(function (d) { return d.note; }).forEach(function (d) { notes.push('* ' + esc(d.day) + ': ' + esc(d.note)); });
   $('notes').innerHTML = notes.join('<br>');
   renderMap();
-  renderDef();
-  renderBest();
-  renderEnemy();
 }
 
+// ---------- Results tab ----------
+function fmtDay(ds) {
+  var p = String(ds).split('-');
+  return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+}
+function resTag(r, big) {
+  if (!r) return '';
+  if (r.live) return '<span class="res n">LIVE</span>';
+  var w = r.win === 1, l = r.win === 0;
+  return '<span class="res ' + (w ? 'w' : l ? 'l' : 'n') + '"' + (big ? ' style="font-size:13px;padding:3px 10px"' : '') + '>' + (w ? 'WIN' : l ? 'LOSS' : 'DONE') + '</span>';
+}
+function renderRes() {
+  var s = S, R = (s.results || []).slice(), box = $('resbody');
+  var byDay = {};
+  R.forEach(function (r) { byDay[r.d] = r; });
+  var dayList = s.days.map(function (d) { return d.day; });
+  R.forEach(function (r) { if (dayList.indexOf(r.d) < 0) dayList.push(r.d); });
+  var done = R.filter(function (r) { return !r.live; });
+  var w = done.filter(function (r) { return r.win === 1; }).length, l = done.filter(function (r) { return r.win === 0; }).length;
+  // Selected day: the ?d= date if it is in this week, else the newest war day on record.
+  var sel = null, selDay = '';
+  if (SEL) {
+    R.forEach(function (r) { if (r.date === SEL) sel = r; });
+    if (!sel && SEL >= s.week && SEL <= addDays(s.week, 6)) selDay = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(SEL + 'T12:00:00').getDay()];
+  }
+  if (sel) selDay = sel.d;
+  if (!selDay) {
+    if (R.length) { sel = R[R.length - 1]; selDay = sel.d; }
+    else if (s.isCurrent) selDay = s.today;
+  }
+
+  var h = '<div class="rhead" style="margin:12px 4px 0"><span class="sec" style="margin:0">' + (s.isCurrent ? 'This week' : 'That week') + '</span>' +
+    '<span class="k" style="font-size:13px">' + (w + l ? '<b style="color:var(--tx)">' + w + '–' + l + '</b> · ' : '') +
+    (s.league ? (s.league === 1 ? 'gold' : 'silver') + ' league' : '') + (s.resultsAt ? ' · updated ' + esc(s.resultsAt) : '') + '</span></div>';
+  h += '<div class="strip" style="--nd:' + dayList.length + ';margin-left:4px;margin-right:4px">' + dayList.map(function (dn) {
+    var r = byDay[dn], isNow = s.isCurrent && dn === s.today, cls = 'dbtn' + (dn === selDay ? ' sel' : '') + (!r && isNow ? ' now' : '') + (!r && !isNow ? ' none' : '');
+    var lab = r ? resTag(r) : isNow ? '<span class="k" style="font-size:11px">today</span>' : '<span style="font-size:11px">–</span>';
+    return '<button class="' + cls + '" data-day="' + esc(dn) + '"' + (dn === selDay ? ' aria-pressed="true"' : '') + ' aria-label="' + esc(dn + (r ? ': ' + (r.live ? 'in progress' : r.win === 1 ? 'win' : r.win === 0 ? 'loss' : 'done') : '')) + '"><span class="dn">' + esc(dn) + '</span>' + lab + '</button>';
+  }).join('') + '</div>';
+
+  var r = sel || null;
+  if (!r) {
+    h += '<div class="rbox" style="margin-left:4px;margin-right:4px"><span class="k">' +
+      (R.length || s.isCurrent ? 'No result for ' + esc(selDay || 'that day') + ' yet. Results show up shortly after the war day closes.' : 'No war results on record for that week.') + '</span></div>';
+  } else {
+    h += '<div class="rbox" style="margin-left:4px;margin-right:4px">' + resDetail(r) + '</div>';
+  }
+  box.innerHTML = h;
+  Array.prototype.forEach.call(box.querySelectorAll('.dbtn'), function (b) {
+    b.onclick = function () {
+      var rr = byDay[b.dataset.day];
+      SEL = rr ? rr.date : dateOfDay(b.dataset.day);
+      renderRes(); setUrl();
+    };
+  });
+}
+function addDays(ds, n) {
+  var p = ds.split('-').map(Number), d = new Date(Date.UTC(p[0], p[1] - 1, p[2] + n, 12));
+  return d.toISOString().slice(0, 10);
+}
+function dateOfDay(dn) {
+  var i = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(dn);
+  return i >= 0 ? addDays(S.week, i) : '';
+}
+function resDetail(r) {
+  var size = r.size || 30;
+  var h = '<div class="rhead"><div style="font-size:14px"><b>' + esc(fmtDay(r.date)) + '</b>' + (r.clan ? ' <span class="k">vs</span> <b style="font-weight:500">' + esc(r.clan) + '</b>' : '') +
+    (r.live ? ' <span class="k" style="font-size:12px">· in progress</span>' : '') + '</div>' + resTag(r, true) + '</div>';
+  var tile = function (lab, val, of) { return '<div class="tile"><div class="tl">' + lab + '</div><div class="tv">' + val + (of ? ' <small>/ ' + of + '</small>' : '') + '</div></div>'; };
+  h += '<div class="tiles">' +
+    tile('Score', r.pts != null ? r.pts + ' <small>–</small> ' + r.epts : '–') +
+    tile('Their map cleared', r.cE, size) +
+    tile('Our walls lost', r.cO, size) +
+    tile('Attacks used', r.used, size) + '</div>';
+  // Shout-outs: praise only.
+  var bits = [], full = (r.full || []).map(nm), buzz = (r.buzz || []).map(nm);
+  if (full.length) bits.push(esc(list(full)) + (full.length > 1 ? ' won both attacks' : ' won both attacks'));
+  if (buzz.length) bits.push(esc(list(buzz)) + ' won in the last 30 minutes');
+  if (r.open) bits.push(esc(nm(r.open)) + ' opened the day');
+  if (r.best && r.best.held) bits.push(esc(nm(r.best.uid)) + '’s wall ' + (r.best.fell ? 'held ' + r.best.held + ' attack' + (r.best.held > 1 ? 's' : '') + ' before it fell' : 'held all day (' + r.best.faced + ' attack' + (r.best.faced > 1 ? 's' : '') + ')'));
+  if (bits.length) h += '<div class="shout"><span class="lab">Shout-outs:</span> ' + bits.join(' · ') + '</div>';
+  h += timesHtml(r);
+  var g = '';
+  if (r.best && r.best.u) g += '<div class="gl">Our best wall</div><div>' + teamHtml(r.best.u) + '</div><div class="gs"><span class="k">' + esc(nm(r.best.uid)) + ' · ' + (r.best.fell ? 'held ' + r.best.held + ' of ' + r.best.faced : 'held all ' + r.best.faced) + '</span></div>';
+  if (r.tough) g += '<div class="gl">Their toughest</div><div>' + (r.tough.u ? teamHtml(r.tough.u) : '<span class="k">lineup not on record</span>') + '</div><div class="gs"><span class="k">' + esc(r.tough.n || '') +
+    (r.tough.held ? ' · held all day (' + r.tough.tries + ' tries)' : ' · took ' + r.tough.tries + ' tries') + '</span>' +
+    (!r.tough.held && r.tough.by ? '<br><span class="k">beaten by ' + esc(nm(r.tough.by)) + '</span>' + (r.tough.bu ? ' ' + teamHtml(r.tough.bu) : '') : '') + '</div>';
+  if (g) h += '<div class="ag" style="margin-top:12px">' + g + '</div>';
+  h += memberTable(r);
+  return h;
+}
+// Attacks per hour of the war day, in the viewer's own time zone. The last hour shows in gold.
+function timesHtml(r) {
+  var t = (r.t || []).slice().sort(function (a, b) { return a - b; });
+  if (t.length < 2) return '';
+  var start = Math.floor(t[0] / 3600) * 3600, last = t[t.length - 1], end = Math.max(start + 11 * 3600, Math.ceil(last / 3600) * 3600);
+  var n = Math.min(14, Math.round((end - start) / 3600)), bins = [];
+  for (var i = 0; i < n; i++) bins.push(0);
+  t.forEach(function (x) { var i = Math.min(n - 1, Math.floor((x - start) / 3600)); bins[i]++; });
+  var mx = Math.max.apply(null, bins) || 1, lateFrom = Math.max(0, n - 1);
+  var lab = function (i) { return new Date((start + i * 3600) * 1000).toLocaleTimeString([], { hour: 'numeric' }).replace(/\s?([AP])M/i, function (m, a) { return a.toLowerCase(); }); };
+  var lateN = bins[lateFrom];
+  return '<div style="margin-top:12px;font-size:13px"><span class="k">When we attacked (your time)</span>' + (lateN ? ' <span class="k">· ' + lateN + ' in the last hour</span>' : '') + '</div>' +
+    '<div class="bars" role="img" aria-label="' + esc('Attacks per hour: ' + bins.join(', ')) + '">' + bins.map(function (b, i) {
+      return '<div class="bar" title="' + esc(lab(i) + ': ' + b + ' attack' + (b === 1 ? '' : 's')) + '"><i class="' + (i === lateFrom ? 'late' : '') + '" style="height:' + Math.round(b / mx * 100) + '%"></i></div>';
+    }).join('') + '</div>' +
+    '<div class="blab">' + bins.map(function (b, i) { return '<span>' + (i % 2 === 0 ? esc(lab(i)) : '') + '</span>'; }).join('') + '</div>';
+}
+function memberTable(r) {
+  var ids = {};
+  Object.keys(r.m || {}).forEach(function (u) { ids[u] = 1; });
+  Object.keys(r.h || {}).forEach(function (u) { ids[u] = 1; });
+  var rows = Object.keys(ids).map(function (u) { var a = (r.m || {})[u] || [0, 0], d = (r.h || {})[u] || [0, 0]; return { u: u, a: a[0], w: a[1], f: d[0], hd: d[1] }; });
+  if (!rows.length) return '';
+  rows.sort(function (x, y) { return (y.a - x.a) || (y.w - x.w) || nm(x.u).localeCompare(nm(y.u)); });
+  if (me) rows.sort(function (x, y) { return (y.u === me) - (x.u === me); });
+  return '<details style="margin:12px 0 0"><summary>Attacks by member (' + rows.length + ')</summary><div style="overflow-x:auto;margin-top:6px"><table class="mt"><thead><tr><th>Champion</th><th>Attacks</th><th>Wins</th><th>Defense held</th></tr></thead><tbody>' +
+    rows.map(function (x) {
+      return '<tr' + (x.u === me ? ' class="me"' : '') + '><td>' + esc(nm(x.u)) + '</td><td>' + x.a + ' / 2</td><td>' + x.w + '</td><td>' + (x.f ? x.hd + ' of ' + x.f : '–') + '</td></tr>';
+    }).join('') + '</tbody></table></div><div class="k" style="font-size:11px;margin-top:4px">Attacks can be unusable once the enemy map is cleared.</div></details>';
+}
+
+// ---------- Recommendations tab ----------
 // Guild best: top 3 hero and titan lineups on record, shown to everyone.
 function renderBest() {
   var b = S.best, box = $('bestbox');
@@ -334,43 +581,92 @@ function renderBest() {
   box.style.display = '';
 }
 
-// Today's opponent: enemy walls from MidAm's Tweaker, with earlier meetings and the teams that beat each lineup.
+// Today's opponent, grouped by lineup: one entry per enemy team, the walls running it, and the teams that beat it.
 function renderEnemy() {
   var s = S, e = s.enemy, box = $('enemybox');
   var age = s.enemyTs ? Date.now() - s.enemyTs : 1e12;
   if (!e || !(e.walls || []).length || !s.isCurrent || age > 20 * 3600 * 1000) { box.style.display = 'none'; return; }
   box.style.display = '';
   var upOnly = ls.get('gw_enemy_up') === '1';
-  var walls = e.walls.slice().sort(function (a, b) { return ((a.st === 'down') - (b.st === 'down')) || (a.s - b.s); });
-  var down = walls.filter(function (w) { return w.st === 'down'; }).length;
-  $('enemysum').innerHTML = 'Today’s opponent: ' + esc(e.clan || '?') + ' <span class="k">(' + (walls.length - down) + ' of ' + walls.length + ' walls up' +
+  var down = e.walls.filter(function (w) { return w.st === 'down'; }).length;
+  $('enemysum').innerHTML = 'Today’s opponent: ' + esc(e.clan || '?') + ' <span class="k">(' + (e.walls.length - down) + ' of ' + e.walls.length + ' walls up' +
     (e.pts ? ', score ' + e.pts[0] + '–' + e.pts[1] : '') + ')</span>';
+  var G = {}, order = [];
+  e.walls.forEach(function (w) {
+    var k = w.t + '|' + (w.u || ('?' + w.s));
+    if (!G[k]) { G[k] = { t: w.t, u: w.u, walls: [], ctr: {}, f0: 0 }; order.push(k); }
+    var g = G[k];
+    g.walls.push(w);
+    g.f0 = Math.max(g.f0, w.f0 || 0);
+    (w.c || []).forEach(function (c) {
+      var o = g.ctr[c.u];
+      if (!o) g.ctr[c.u] = { u: c.u, w: c.w, n: c.n, p: c.p, by: (c.by || []).slice() };
+      else {
+        if (c.w / c.n > o.w / o.n || (c.w / c.n === o.w / o.n && c.n > o.n)) { o.w = c.w; o.n = c.n; }
+        if (c.p && (!o.p || c.p < o.p)) o.p = c.p;
+        (c.by || []).forEach(function (id) { if (o.by.indexOf(id) < 0) o.by.push(id); });
+      }
+    });
+  });
+  var groups = order.map(function (k) {
+    var g = G[k];
+    g.up = g.walls.filter(function (w) { return w.st !== 'down'; });
+    g.pw = g.walls.map(function (w) { return w.pw || 0; }).filter(Boolean);
+    return g;
+  }).sort(function (a, b) { return ((b.up.length > 0) - (a.up.length > 0)) || (b.walls.length - a.walls.length) || (Math.max.apply(null, b.pw.concat(0)) - Math.max.apply(null, a.pw.concat(0))); });
   var h = '<div class="k" style="font-size:12px">' + (e.met ? 'Met them ' + e.met + ' time' + (e.met > 1 ? 's' : '') + ' before' + (e.lastMet ? ', last on ' + esc(e.lastMet) : '') + '.' : 'No earlier meeting on record.') +
     ' Map as of ' + esc(s.enemyAt || '?') + '; walls go down as we attack, so this can be behind.</div>';
   h += '<label class="eopt"><input type="checkbox" id="eup"' + (upOnly ? ' checked' : '') + '> Walls still up only</label>';
-  walls.forEach(function (w) {
-    if (upOnly && w.st === 'down') return;
-    var c = w.c || [], mine = me ? c.filter(function (x) { return (x.by || []).indexOf(me) >= 0; }) : [];
-    var show = c.slice(0, 3);
-    mine.forEach(function (x) { if (show.indexOf(x) < 0) show.push(x); });
-    var ctr = show.length ? show.map(function (x) {
-      var who = (x.by || []).filter(function (id) { return id !== me; }).map(nm);
-      return '<div>' + teamHtml(x.u) + '</div><div class="gs"><span class="k">' + x.w + ' of ' + x.n + ' won' + (x.p ? ', from ' + pfmt(x.p) : '') +
-        (who.length ? ' · ' + esc(who.slice(0, 3).join(', ')) + (who.length > 3 ? ' +' + (who.length - 3) : '') : '') + '</span>' +
-        ((x.by || []).indexOf(me) >= 0 ? '<span class="you">you won with this</span>' : '') + '</div>';
-    }).join('') : '';
-    ctr = ctr ? '<div class="cgrid">' + ctr + '</div>' : '<span class="k">No full-HP win on record' + (w.f0 ? ' (' + w.f0 + ' fights)' : '') + '.</span>';
-    h += '<div class="ew' + (w.st === 'down' ? ' down' : '') + '"><div class="eh"><span class="tag ' + (w.t === 't' ? 't">Titan' : 'h">Hero') + '</span>' +
-      esc(w.f || ('Slot ' + w.s)) + ' · <b>' + esc(w.n) + '</b> <span class="k">' + pfmt(w.pw) + '</span>' +
-      (w.st === 'down' ? ' <span class="k">down</span>' : w.st === 'busy' ? '<span class="busy">being attacked</span>' : '') + '</div>' +
-      (w.u ? '<div class="el" style="margin:3px 0">' + teamHtml(w.u) + '</div>' : '') +
-      '<div class="ec"><span class="k">Beaten by</span> ' + ctr + '</div>' +
-      (w.h ? '<div class="k" style="font-size:11px;margin-top:2px">' + esc(w.h) + '</div>' : '') + '</div>';
+  var shown = 0;
+  groups.forEach(function (g) {
+    var walls = upOnly ? g.up : g.walls;
+    if (!walls.length) return;
+    shown++;
+    var lo = Math.min.apply(null, g.pw.concat([Infinity])), hi = Math.max.apply(null, g.pw.concat([0]));
+    var rng = g.pw.length ? (lo === hi ? pfmt(hi) : pfmt(lo) + '–' + pfmt(hi)) : '';
+    var who = walls.map(function (w) { return esc(w.n) + (w.st === 'down' ? ' <span class="k">(down)</span>' : w.st === 'busy' ? '<span class="busy">being attacked</span>' : ''); }).join(', ');
+    var ctr = Object.keys(g.ctr).map(function (k) { return g.ctr[k]; }).sort(function (a, b) { return ((b.w + 1) / (b.n + 2) - (a.w + 1) / (a.n + 2)) || (b.w - a.w); });
+    var mine = me ? ctr.filter(function (c) { return c.by.indexOf(me) >= 0; }) : [], show = ctr.slice(0, 3);
+    mine.forEach(function (c) { if (show.indexOf(c) < 0) show.push(c); });
+    var cl = show.length ? '<div class="cgrid">' + show.map(function (c) {
+      var by = c.by.filter(function (id) { return id !== me; }).map(nm);
+      return '<div>' + teamHtml(c.u) + '</div><div class="gs"><span class="k">' + c.w + ' of ' + c.n + ' won' + (c.p ? ', from ' + pfmt(c.p) : '') +
+        (by.length ? ' · ' + esc(by.slice(0, 3).join(', ')) + (by.length > 3 ? ' +' + (by.length - 3) : '') : '') + '</span>' +
+        (c.by.indexOf(me) >= 0 ? '<span class="you">you won with this</span>' : '') + '</div>';
+    }).join('') + '</div>' : '<span class="k">No full-HP win on record' + (g.f0 ? ' (' + g.f0 + ' fights)' : '') + '. Try a good attack team below.</span>';
+    h += '<div class="ew' + (g.up.length ? '' : ' down') + '"><div class="eh"><span class="tag ' + (g.t === 't' ? 't">Titan' : 'h">Hero') + '</span>' +
+      '<b>' + walls.length + ' wall' + (walls.length > 1 ? 's' : '') + '</b>' + (rng ? ' <span class="k">' + rng + '</span>' : '') + '</div>' +
+      (g.u ? '<div class="el" style="margin:3px 0">' + teamHtml(g.u) + '</div>' : '<div class="el">lineup not seen yet</div>') +
+      '<div class="el">' + who + '</div>' +
+      '<div class="ec">' + (show.length ? '<span class="k">Beaten by</span> ' : '') + cl + '</div></div>';
   });
+  if (!shown) h += '<div class="k" style="margin-top:6px">Every wall is down.</div>';
   h += '<div class="k" style="margin-top:8px;font-size:11px">Beaten by = real GW and AoC wins against this lineup at this power or more, by a team of similar power, counting only fights that started at full HP. "From" is the lowest team power that won, so check your team is close to it.</div>';
   $('enemybody').innerHTML = h;
   var cb = $('eup');
   if (cb) cb.onchange = function () { ls.set('gw_enemy_up', this.checked ? '1' : ''); renderEnemy(); };
+}
+
+// General-purpose attack teams: proven over every wall they met, for any opponent.
+function renderAtk() {
+  var a = S.atk, box = $('atkbox');
+  if (!a || (!(a.hero || []).length && !(a.titan || []).length)) { box.style.display = 'none'; return; }
+  var myPow = me && (S.power || {})[me];
+  var rows = function (arr, title, pi) {
+    return '<div class="gl" style="grid-column:1/-1;margin-top:6px">' + title + '</div>' + arr.map(function (x, i) {
+      var near = myPow && myPow[pi] && x.p && x.p <= myPow[pi] * 1.05;
+      return '<div class="gl">' + (i + 1) + '.</div><div>' + teamHtml(x.u) + '</div><div class="gs"><span class="hold" style="color:var(--grnt)">' + Math.round(x.w * 100 / x.n) + '%</span> <span class="k">won ' + x.w + ' of ' + x.n +
+        (x.b > 1 ? ', beat ' + x.b + ' lineups' : '') + (x.p ? ', from ' + pfmt(x.p) : '') + '</span>' + (near ? '<span class="near">near your power</span>' : '') +
+        ((x.by || []).length ? '<br><span class="k">used by ' + esc(x.by.join(', ')) + '</span>' : '') + '</div>';
+    }).join('');
+  };
+  var h = '<div class="ag">';
+  if ((a.hero || []).length) h += rows(a.hero, 'Heroes', 0);
+  if ((a.titan || []).length) h += rows(a.titan, 'Titans', 1);
+  h += '</div><div class="k" style="margin-top:8px;font-size:11px">Attack teams with the best record against every wall they met in real GW and AoC fights over the last 60 days (5+ fights, full HP, attackers not much stronger than the wall). "From" is the lowest team power that won.' +
+    (myPow ? ' "Near your power" compares with your GW defense team power.' : '') + '</div>';
+  $('atkbody').innerHTML = h;
+  box.style.display = '';
 }
 
 function holdTxt(h, n, min) {
@@ -391,7 +687,7 @@ function renderDef() {
     if (walls.length) parts.push('<div class="dl"><span class="k">Your walls:</span> ' + walls.join(', ') + '</div>');
     var sg = (s.suggest || {})[me] || {};
     var myPow = (s.power || {})[me], g = '';
-    var near = function (r) { return r && r.bp ? '<br><span class="k">on ' + pfmt(r.bp) + (r.cap ? '\u2013' + pfmt(r.cap) : '+') + ' walls</span>' : ''; };
+    var near = function (r) { return r && r.bp ? '<br><span class="k">on ' + pfmt(r.bp) + (r.cap ? '–' + pfmt(r.cap) : '+') + ' walls</span>' : ''; };
     [['hero', 'Hero defense', 0], ['titan', 'Titan defense', 1]].forEach(function (k, idx) {
       var o = sg[k[0]], pw = myPow ? '<small>' + pfmt(myPow[k[2]]) + '</small>' : '';
       if (!o && !myPow) return;
@@ -444,7 +740,7 @@ $('bd').addEventListener('click', function (e) {
   var holder = S.warriors.indexOf(me) >= 0, was = row[i];
   row[i] = was ? '' : (holder ? 'out' : 'sub');
   S.marks[me] = row;
-  render();
+  renderSignup();
   pending++;
   say(holder ? (was ? 'Back on for ' + d.day + '.' : 'Asked off ' + d.day + '. MidAm confirms before signets change.')
              : (was ? 'Withdrew your sub offer for ' + d.day + '.' : 'Offered to sub on ' + d.day + '. Thanks!'), 'ok');
@@ -456,7 +752,6 @@ $('bd').addEventListener('click', function (e) {
 
 $('who').addEventListener('change', function () {
   me = this.value; ls.set('gw_me_id', me);
-  $('copy').style.display = me ? '' : 'none';
   say(me ? (S.warriors.indexOf(me) >= 0 ? 'You hold a signet: click a day to ask off.' : 'Click a day to offer to sub.') : 'Pick your name first.');
   render();
 });
@@ -467,19 +762,20 @@ $('copy').addEventListener('click', function () {
   if (S.pinRequired && !pin) { say('Enter the guild PIN first.', 'err'); return; }
   call('copyLast', [S.week, me, pin]);
 });
-$('prev').onclick = function () { load(S.prev); };
-$('next').onclick = function () { load(S.next); };
-$('cur').onclick = function () { load(''); };
+$('prev').onclick = function () { SEL = ''; setUrl(); load(S.prev); };
+$('next').onclick = function () { SEL = ''; setUrl(); load(S.next); };
+$('cur').onclick = function () { SEL = ''; setUrl(); load(''); };
 
 function iconTog() { $('icontog').textContent = ls.get('gw_names') === '1' ? 'Show pictures' : 'Show names instead of pictures'; }
 $('icontog').onclick = function () { ls.set('gw_names', ls.get('gw_names') === '1' ? '' : '1'); iconTog(); if (S) render(); };
 iconTog();
 
+setTab(TAB, false);
 $('pin').value = ls.get('gw_pin');
 if (INIT && INIT.ok) got(INIT);
 else {
-  try { var C = JSON.parse(ls.get('gw_cache') || 'null'); if (C && C.ok) got(C, true); } catch (e) {}
-  load('');
+  try { var C = JSON.parse(ls.get('gw_cache') || 'null'); if (C && C.ok && !SEL) got(C, true); } catch (e) {}
+  load(SEL || '');
 }
 setInterval(function () { if (!busy && !pending && S && document.visibilityState === 'visible') load(S.week, true); }, 60000);
 </script>
