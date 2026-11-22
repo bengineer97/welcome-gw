@@ -88,9 +88,9 @@ th.d{width:52px}
 .eopt{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--mut);margin:6px 0 2px;cursor:pointer}
 .eopt input{height:auto;width:auto}
 .tm{display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;vertical-align:middle}
-.ic{width:30px;height:30px;border-radius:6px;border:1px solid var(--bd2);background:var(--field);display:block;object-fit:contain}
-.ic.pet{width:24px;height:24px;border-radius:50%;border-color:var(--gold);margin-left:3px}
-.chip{display:inline-block;font-size:12px;line-height:1.2;padding:3px 7px;border-radius:6px;background:var(--field);border:1px solid var(--bd2);color:var(--tx);white-space:nowrap}
+.ic{width:45px;height:45px;border-radius:8px;border:1px solid var(--bd2);background:var(--field);display:block;object-fit:contain}
+.ic.pet{border-radius:50%;border-color:var(--gold);margin-left:4px}
+.chip{display:inline-block;font-size:13px;line-height:1.2;padding:4px 8px;border-radius:6px;background:var(--field);border:1px solid var(--bd2);color:var(--tx);white-space:nowrap}
 .chip.pet{border-color:var(--gold);color:var(--gold);border-radius:999px;margin-left:3px}
 .top3 li{padding:2px 0}
 .fine{margin:6px 4px 0;font-size:10px;color:var(--dim);line-height:1.5}
@@ -152,7 +152,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 <script>var INIT = null;</script>
 <script>
 var UI_VERSION = '4.1';   // must match VERSION in Code.gs
-var UI_BUILD = 'd';        // page-only revision letter, shown in the footer (4.1d = official Fan Kit pictures, titans included)
+var UI_BUILD = 'f';        // page-only revision letter, shown in the footer (4.1f = 45 px pictures, pets the same size as heroes)
 var S = null, me = '', busy = false, pending = 0, fresh = false;
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
@@ -208,7 +208,7 @@ function teamHtml(u) {
     ls.set('gw_icons', JSON.stringify(m));
     if (fresh && S) render();
   }).catch(function () {});
-  fetch('icons.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (o) {
+  fetch('icons.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (o) {
     var n = 0;
     Object.keys(o || {}).forEach(function (k) { var v = String(o[k]); if (v.length < 60000 && DATA_OK.test(v)) { ICON_DATA[iconKey(k)] = v; n++; } });
     if (n && S) render();
