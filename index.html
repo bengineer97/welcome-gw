@@ -87,15 +87,24 @@ th.d{width:52px}
 .you{display:inline-block;font-size:10px;font-weight:700;color:#17162A;background:var(--gold);border-radius:4px;padding:0 4px;margin-left:4px}
 .eopt{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--mut);margin:6px 0 2px;cursor:pointer}
 .eopt input{height:auto;width:auto}
-.tm{display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;vertical-align:middle}
-.ic{width:45px;height:45px;border-radius:8px;border:1px solid var(--bd2);background:var(--field);display:block;object-fit:contain}
+.tm{display:inline-flex;flex-wrap:nowrap;gap:3px;align-items:center;vertical-align:middle}
+:root{--ic:clamp(26px,4.6vw,34px)}
+.tgrid{display:grid;grid-template-columns:max-content max-content 1fr;gap:6px 10px;align-items:center;margin-top:8px}
+.tgrid .gl{color:var(--mut);font-size:13px;line-height:1.25;white-space:nowrap}
+.tgrid .gl small{display:block;font-size:11px;color:var(--dim)}
+.tgrid .gl.try{color:var(--subtx)}
+.tgrid .gs{font-size:13px;line-height:1.4}
+.tgrid .sep{grid-column:1/-1;height:0;border-top:1px solid var(--bd);margin:2px 0}
+.cgrid{display:grid;grid-template-columns:max-content 1fr;gap:4px 10px;align-items:center;margin-top:3px}
+.cgrid .gs{font-size:12px;line-height:1.4}
+.ic{width:var(--ic);height:var(--ic);border-radius:7px;border:1px solid var(--bd2);background:var(--field);display:block;object-fit:contain}
 .ic.pet{border-radius:50%;border-color:var(--gold);margin-left:4px}
 .chip{display:inline-block;font-size:13px;line-height:1.2;padding:4px 8px;border-radius:6px;background:var(--field);border:1px solid var(--bd2);color:var(--tx);white-space:nowrap}
 .chip.pet{border-color:var(--gold);color:var(--gold);border-radius:999px;margin-left:3px}
 .top3 li{padding:2px 0}
 .fine{margin:6px 4px 0;font-size:10px;color:var(--dim);line-height:1.5}
 .fine a,.lnk{color:var(--mut);text-decoration:underline;cursor:pointer;background:none;border:none;padding:0;height:auto;font:inherit}
-@media (max-width:480px){.wrap{padding:8px 4px 16px}.card{padding:12px 4px;border-radius:12px}th.d{width:35px}th:last-child,td:last-child{width:28px}h1{font-size:18px}.nav{flex-wrap:nowrap;flex:none}.nav button{height:34px}.nav button[aria-label]{width:32px}#cur{padding:0 8px;font-size:12px}th:first-child,td:first-child{width:auto;padding-left:4px}.c{width:28px;height:26px}.cnt{padding:1px 2px}.top{flex-wrap:nowrap;align-items:flex-start}}
+@media (max-width:480px){.tgrid:not(.tbest){grid-template-columns:max-content 1fr}.tgrid:not(.tbest) .gl{grid-column:1/-1;margin-bottom:-3px}.tbest{grid-template-columns:max-content 1fr;gap:3px 8px}.tbest .gs{grid-column:2;font-size:12px;margin-bottom:4px}.cgrid{grid-template-columns:1fr}.wrap{padding:8px 4px 16px}.card{padding:12px 4px;border-radius:12px}th.d{width:35px}th:last-child,td:last-child{width:28px}h1{font-size:18px}.nav{flex-wrap:nowrap;flex:none}.nav button{height:34px}.nav button[aria-label]{width:32px}#cur{padding:0 8px;font-size:12px}th:first-child,td:first-child{width:auto;padding-left:4px}.c{width:28px;height:26px}.cnt{padding:1px 2px}.top{flex-wrap:nowrap;align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -152,7 +161,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 <script>var INIT = null;</script>
 <script>
 var UI_VERSION = '4.1';   // must match VERSION in Code.gs
-var UI_BUILD = 'f';        // page-only revision letter, shown in the footer (4.1f = 45 px pictures, pets the same size as heroes)
+var UI_BUILD = 'g';        // page-only revision letter, shown in the footer (4.1g = pictures 34 px, scale down on small screens; rows aligned)
 var S = null, me = '', busy = false, pending = 0, fresh = false;
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
@@ -311,16 +320,16 @@ function render() {
 function renderBest() {
   var b = S.best, box = $('bestbox');
   if (!b || (!(b.hero || []).length && !(b.titan || []).length)) { box.style.display = 'none'; return; }
-  var list = function (arr) {
-    return '<ol class="top3">' + arr.map(function (x) {
+  var rows = function (arr, title) {
+    return '<div class="gl" style="grid-column:1/-1;margin-top:4px">' + title + '</div>' + arr.map(function (x, i) {
       var who = (x.users || []).length ? 'run by ' + x.users.map(esc).join(', ') : 'seen on enemies';
-      return '<li>' + teamHtml(x.u) + ' &#183; ' + holdTxt(x.held, x.n) + ' <span class="k">&#183; ' + who + '</span></li>';
-    }).join('') + '</ol>';
+      return '<div class="gl">' + (i + 1) + '.</div><div>' + teamHtml(x.u) + '</div><div class="gs">' + holdTxt(x.held, x.n) + '<br><span class="k">' + who + '</span></div>';
+    }).join('');
   };
-  var h = '';
-  if ((b.hero || []).length) h += '<div class="dl"><span class="k">Heroes</span>' + list(b.hero) + '</div>';
-  if ((b.titan || []).length) h += '<div class="dl"><span class="k">Titans</span>' + list(b.titan) + '</div>';
-  h += '<div class="k" style="margin-top:8px;font-size:11px">Best-holding lineups in real GW and AoC fights over the last 60 days, ours and enemies\', against attackers of similar power (5+ fights).</div>';
+  var h = '<div class="tgrid tbest">';
+  if ((b.hero || []).length) h += rows(b.hero, 'Heroes');
+  if ((b.titan || []).length) h += rows(b.titan, 'Titans');
+  h += '</div><div class="k" style="margin-top:8px;font-size:11px">Best-holding lineups in real GW and AoC fights over the last 60 days, ours and enemies\', against attackers of similar power (5+ fights).</div>';
   $('bestbody').innerHTML = h;
   box.style.display = '';
 }
@@ -346,15 +355,16 @@ function renderEnemy() {
     mine.forEach(function (x) { if (show.indexOf(x) < 0) show.push(x); });
     var ctr = show.length ? show.map(function (x) {
       var who = (x.by || []).filter(function (id) { return id !== me; }).map(nm);
-      return '<div style="margin-top:3px">' + teamHtml(x.u) + ' <span class="k">' + x.w + ' of ' + x.n + ' won' + (x.p ? ', from ' + pfmt(x.p) : '') +
+      return '<div>' + teamHtml(x.u) + '</div><div class="gs"><span class="k">' + x.w + ' of ' + x.n + ' won' + (x.p ? ', from ' + pfmt(x.p) : '') +
         (who.length ? ' · ' + esc(who.slice(0, 3).join(', ')) + (who.length > 3 ? ' +' + (who.length - 3) : '') : '') + '</span>' +
         ((x.by || []).indexOf(me) >= 0 ? '<span class="you">you won with this</span>' : '') + '</div>';
-    }).join('') : '<span class="k">No full-HP win on record' + (w.f0 ? ' (' + w.f0 + ' fights)' : '') + '.</span>';
+    }).join('') : '';
+    ctr = ctr ? '<div class="cgrid">' + ctr + '</div>' : '<span class="k">No full-HP win on record' + (w.f0 ? ' (' + w.f0 + ' fights)' : '') + '.</span>';
     h += '<div class="ew' + (w.st === 'down' ? ' down' : '') + '"><div class="eh"><span class="tag ' + (w.t === 't' ? 't">Titan' : 'h">Hero') + '</span>' +
       esc(w.f || ('Slot ' + w.s)) + ' · <b>' + esc(w.n) + '</b> <span class="k">' + pfmt(w.pw) + '</span>' +
       (w.st === 'down' ? ' <span class="k">down</span>' : w.st === 'busy' ? '<span class="busy">being attacked</span>' : '') + '</div>' +
       (w.u ? '<div class="el" style="margin:3px 0">' + teamHtml(w.u) + '</div>' : '') +
-      '<div class="ec"><span class="k">Beaten by:</span> ' + ctr + '</div>' +
+      '<div class="ec"><span class="k">Beaten by</span> ' + ctr + '</div>' +
       (w.h ? '<div class="k" style="font-size:11px;margin-top:2px">' + esc(w.h) + '</div>' : '') + '</div>';
   });
   h += '<div class="k" style="margin-top:8px;font-size:11px">Beaten by = real GW and AoC wins against this lineup at this power or more, by a team of similar power, counting only fights that started at full HP. "From" is the lowest team power that won, so check your team is close to it.</div>';
@@ -380,22 +390,21 @@ function renderDef() {
     var walls = (s.map || []).filter(function (x) { return x.uid === me; }).map(function (x) { return esc(x.fort) + ' (' + esc(x.type) + ')'; });
     if (walls.length) parts.push('<div class="dl"><span class="k">Your walls:</span> ' + walls.join(', ') + '</div>');
     var sg = (s.suggest || {})[me] || {};
-    var myPow = (s.power || {})[me];
-    [['hero', 'Hero defense', 0], ['titan', 'Titan defense', 1]].forEach(function (k) {
-      var o = sg[k[0]];
-      if (!o) {
-        if (myPow) parts.push('<div class="dl"><span class="k">' + k[1] + ':</span> ' + pfmt(myPow[k[2]]) + '</div>');
-        return;
+    var myPow = (s.power || {})[me], g = '';
+    [['hero', 'Hero defense', 0], ['titan', 'Titan defense', 1]].forEach(function (k, idx) {
+      var o = sg[k[0]], pw = myPow ? '<small>' + pfmt(myPow[k[2]]) + '</small>' : '';
+      if (!o && !myPow) return;
+      if (g) g += '<div class="sep"></div>';
+      g += '<div class="gl">' + k[1] + pw + '</div>';
+      if (!o || !o.cur) { g += '<div class="gs k">none on record</div><div></div>'; }
+      else g += '<div>' + teamHtml(o.cur.u) + '</div><div class="gs">' + holdTxt(o.cur.held, o.cur.n) + (o.sug ? '' : '<br><span class="k">no better lineup found</span>') + '</div>';
+      if (o && o.sug) {
+        g += '<div class="gl try">Try</div><div>' + teamHtml(o.sug.u) + '</div><div class="gs">' + holdTxt(o.sug.held, o.sug.n) +
+          (o.sug.weak ? '<br><span class="k">your units are a bit under the usual power for it</span>' : '') +
+          (o.sug.noPet ? '<br><span class="k">pet not seen on you</span>' : '') + '</div>';
       }
-      var h = '<div class="dl"><span class="k">' + k[1] + (myPow ? ' (' + pfmt(myPow[k[2]]) + ')' : '') + ':</span> ' +
-        (o.cur ? teamHtml(o.cur.u) + ' &#183; ' + holdTxt(o.cur.held, o.cur.n) : '<span class="k">none on record</span>');
-      if (o.sug) {
-        h += '<div style="margin-top:4px"><span class="try">Try:</span> ' + teamHtml(o.sug.u) + ' &#183; ' + holdTxt(o.sug.held, o.sug.n) +
-          (o.sug.weak ? ' <span class="k">(your units are a bit under the usual power for it)</span>' : '') +
-          (o.sug.noPet ? ' <span class="k">(pet not seen on you)</span>' : '') + '</div>';
-      } else if (o.cur) h += ' <span class="k">&#183; no better lineup found</span>';
-      parts.push(h + '</div>');
     });
+    if (g) parts.push('<div class="tgrid">' + g + '</div>');
   }
   box.style.display = parts.length ? '' : 'none';
   var full = me && ((s.suggest || {})[me] || {}).fullRoster;
