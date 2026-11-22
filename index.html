@@ -161,7 +161,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbxWLlspQfnHcJfxm2ee6NIeC7
 <script>var INIT = null;</script>
 <script>
 var UI_VERSION = '4.1';   // must match VERSION in Code.gs
-var UI_BUILD = 'g';        // page-only revision letter, shown in the footer (4.1g = pictures 34 px, scale down on small screens; rows aligned)
+var UI_BUILD = 'j';        // page-only revision letter, shown in the footer (4.1j = defense records 'on 850k-1.50M walls' (or '850k+'); needs Tweaker 018)
 var S = null, me = '', busy = false, pending = 0, fresh = false;
 var IC = {
   sig: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F0C46A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/></svg>',
@@ -373,9 +373,9 @@ function renderEnemy() {
   if (cb) cb.onchange = function () { ls.set('gw_enemy_up', this.checked ? '1' : ''); renderEnemy(); };
 }
 
-function holdTxt(h, n) {
+function holdTxt(h, n, min) {
   if (!n) return '<span class="k">no fights on record</span>';
-  if (n < 5) return '<span class="k">held ' + h + ' of ' + n + ', too few fights to judge</span>';
+  if (n < (min || 5)) return '<span class="k">held ' + h + ' of ' + n + ', too few fights to judge</span>';
   var p = Math.round(h * 100 / n), c = p >= 60 ? 'var(--grnt)' : p >= 35 ? 'var(--ambt)' : 'var(--outtx)';
   return '<span class="hold" style="color:' + c + '">' + p + '%</span> <span class="k">held ' + h + ' of ' + n + '</span>';
 }
@@ -391,15 +391,16 @@ function renderDef() {
     if (walls.length) parts.push('<div class="dl"><span class="k">Your walls:</span> ' + walls.join(', ') + '</div>');
     var sg = (s.suggest || {})[me] || {};
     var myPow = (s.power || {})[me], g = '';
+    var near = function (r) { return r && r.bp ? '<br><span class="k">on ' + pfmt(r.bp) + (r.cap ? '\u2013' + pfmt(r.cap) : '+') + ' walls</span>' : ''; };
     [['hero', 'Hero defense', 0], ['titan', 'Titan defense', 1]].forEach(function (k, idx) {
       var o = sg[k[0]], pw = myPow ? '<small>' + pfmt(myPow[k[2]]) + '</small>' : '';
       if (!o && !myPow) return;
       if (g) g += '<div class="sep"></div>';
       g += '<div class="gl">' + k[1] + pw + '</div>';
       if (!o || !o.cur) { g += '<div class="gs k">none on record</div><div></div>'; }
-      else g += '<div>' + teamHtml(o.cur.u) + '</div><div class="gs">' + holdTxt(o.cur.held, o.cur.n) + (o.sug ? '' : '<br><span class="k">no better lineup found</span>') + '</div>';
+      else g += '<div>' + teamHtml(o.cur.u) + '</div><div class="gs">' + holdTxt(o.cur.held, o.cur.n, o.cur.bp ? 4 : 5) + near(o.cur) + (o.sug ? '' : '<br><span class="k">no better lineup found</span>') + '</div>';
       if (o && o.sug) {
-        g += '<div class="gl try">Try</div><div>' + teamHtml(o.sug.u) + '</div><div class="gs">' + holdTxt(o.sug.held, o.sug.n) +
+        g += '<div class="gl try">Try</div><div>' + teamHtml(o.sug.u) + '</div><div class="gs">' + holdTxt(o.sug.held, o.sug.n, 4) + near(o.sug) +
           (o.sug.weak ? '<br><span class="k">your units are a bit under the usual power for it</span>' : '') +
           (o.sug.noPet ? '<br><span class="k">pet not seen on you</span>' : '') + '</div>';
       }
@@ -409,7 +410,7 @@ function renderDef() {
   box.style.display = parts.length ? '' : 'none';
   var full = me && ((s.suggest || {})[me] || {}).fullRoster;
   box.innerHTML = parts.length ? '<h3>Your defense</h3>' + parts.join('') +
-    (me && s.suggestAt && (s.suggest || {})[me] ? '<div class="k" style="margin-top:8px;font-size:11px">Suggestions come from real GW and AoC fights against attackers of similar power, using ' +
+    (me && s.suggestAt && (s.suggest || {})[me] ? '<div class="k" style="margin-top:8px;font-size:11px">Suggestions come from real GW and AoC fights against attackers of similar power, counting walls from 85% to 150% of your power for that lineup (85% and up when that range has too few fights), using ' +
       (full ? 'your full roster' : 'units you have been seen with') + '. Updated ' + esc(s.suggestAt) + '.</div>' : '') : '';
 }
 
